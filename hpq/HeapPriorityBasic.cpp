@@ -25,7 +25,7 @@ HeapPriorityBasic<T> HeapPriorityBasic<T>::load(vector<int> inits) {
   
   data.push_back(std::make_tuple('X', -1));
   for (int i = 0; i < inits.size(); i++) {
-    auto t = std::make_tuple('X', inits.at(i));
+    auto t = make_tuple('X', inits.at(i));
     data.push_back(t);
   }
   
@@ -38,6 +38,46 @@ void HeapPriorityBasic<T>::initialize_data() {
 }
 
 template <class T>
+tuple<int, int> HeapPriorityBasic<T>::get_children_priority(int i) {
+  int index_0 = i << 1;
+  int index_1 = (i << 1) + 1;
+  bool i0 = index_0 < data.size();
+  bool i1 = index_1 < data.size();
+  
+  return make_tuple(i0 ? get_priority_at(index_0) : -1, i1 ? get_priority_at(index_1) : -1);
+}
+
+template <class T>
+void HeapPriorityBasic<T>::_get_children_priority(int i) {
+  tuple<int, int> p = get_children_priority(i);
+  int a = get<0>(p);
+  int b = get<1>(p);
+  
+  string s = "Children of " + to_string(get_priority_at(i)) + " is: ";
+  s += (a == -1) ? " <DNE> " : to_string(a) + ", ";
+  s += (b == -1) ? " <DNE> " : to_string(b);
+  
+  cout << s << endl;
+}
+
+template <class T>
+int HeapPriorityBasic<T>::get_parent_priority(int i) {
+  return get_priority_at(i >> 1);
+}
+
+template <class T>
+void HeapPriorityBasic<T>::_get_parent_priority(int i) {
+  string s = "Parent of " + to_string(get_priority_at(i)) + " is: " + to_string(get_parent_priority(i));
+  
+  cout << s << endl;
+}
+
+template <class T>
+int HeapPriorityBasic<T>::get_priority_at(int i) {
+  return get<1>(data.at(i));
+}
+
+template <class T>
 void HeapPriorityBasic<T>::debug_print() {
   bool details = false;
   int digit_display = 6;
@@ -47,7 +87,7 @@ void HeapPriorityBasic<T>::debug_print() {
   
   printf("Tree height: %d (%lu items)\n", height, data.size() - 1);
   for (int i = 0; i < data.size(); i++) {
-    if (details) printf("%d ", get<1>(data.at(i)));
+    if (details) printf("%d ", get_priority_at(i));
   }
   if (details) printf("\n");
   
@@ -72,7 +112,7 @@ void HeapPriorityBasic<T>::debug_print() {
       char z[8];
       
       if (element_index < data.size()) {
-        sprintf(z, " %4d ", get<1>(data.at(element_index++)));
+        sprintf(z, " %4d ", get_priority_at(element_index++));//get<1>(data.at(element_index++)));
         s += z;
         //s += "______";
       } else {

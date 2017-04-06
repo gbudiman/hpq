@@ -21,6 +21,11 @@ public:
   
   void debug_print();
   int get_height();
+  int get_parent_priority(int i);
+  void _get_parent_priority(int i);
+  std::tuple<int, int> get_children_priority(int i);
+  void _get_children_priority(int i);
+  int get_priority_at(int i);
   
 private:
   std::vector<std::tuple<T, int>> data;
