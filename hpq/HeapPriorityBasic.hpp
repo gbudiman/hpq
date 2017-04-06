@@ -30,9 +30,16 @@ public:
   bool verify_all();
   bool verify(int i);
   
+  void take();
+  //void put(std::tuple<T, int> in);
+  void put(int i);
 private:
   std::vector<std::tuple<T, int>> data;
   void initialize_data();
+  void last_to_first();
+  void sift(int i);
+  void swap(int a, int b);
+  void percolate(int i);
   
 };
 

@@ -10,9 +10,9 @@
 using namespace std;
 
 UnitTest::UnitTest() {
-  
-  
-  test_heap_structure();
+  //test_heap_structure();
+  //test_take();
+  test_put();
 }
 
 void UnitTest::test_heap_structure() {
@@ -38,4 +38,45 @@ void UnitTest::test_heap_structure() {
   h._verify_all();
   h.load(v4)._verify_all();
   h.load(v5)._verify_all();
+}
+
+void UnitTest::test_take() {
+  vector<int> v0 = {1,3,5,6,4,8};
+  HeapPriorityBasic<int> h = HeapPriorityBasic<int>(v0);
+  h._verify_all();
+  h.debug_print();
+  h.take();
+  h._verify_all();
+  h.debug_print();
+  h.take();
+  h._verify_all();
+  h.debug_print();
+  h.take();
+  h._verify_all();
+  h.debug_print();
+  h.take();
+  h._verify_all();
+  h.debug_print();
+  h.take();
+  h._verify_all();
+  h.debug_print();
+  h.take();
+  h._verify_all();
+  h.debug_print();
+}
+
+void UnitTest::test_put() {
+  vector<int> v0 = {1,3,5,6,4,8};
+  HeapPriorityBasic<int> h = HeapPriorityBasic<int>(v0);
+  h._verify_all();
+  h.debug_print();
+  h.put(2);
+  h._verify_all();
+  h.debug_print();
+  h.put(3);
+  h._verify_all();
+  h.debug_print();
+  h.put(5);
+  h._verify_all();
+  h.debug_print();
 }

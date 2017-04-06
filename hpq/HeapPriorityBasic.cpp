@@ -78,6 +78,61 @@ int HeapPriorityBasic<T>::get_priority_at(int i) {
 }
 
 template <class T>
+void HeapPriorityBasic<T>::put(int i) {
+  data.push_back(make_tuple('X', i));
+  percolate((int) data.size() - 1);
+}
+
+template <class T>
+void HeapPriorityBasic<T>::percolate(int i) {
+  int p = get_parent_priority(i);
+  int c = get_priority_at(i);
+  
+  if (p > c) {
+    swap(i, i >> 1);
+    percolate(i >> 1);
+  }
+}
+
+template <class T>
+void HeapPriorityBasic<T>::take() {
+  last_to_first();
+  sift(1);
+}
+
+template <class T>
+void HeapPriorityBasic<T>::last_to_first() {
+  data.at(1) = data.at(data.size() - 1);
+  data.pop_back();
+}
+
+template <class T>
+void HeapPriorityBasic<T>::sift(int i) {
+  auto ch = get_children_priority(i);
+  int c = get_priority_at(i);
+  int a = get<0>(ch);
+  int b = get<1>(ch);
+  
+  if (a != -1 && b != -1) {
+    int min = std::min(a, b);
+    if (a == min) {
+      swap(i, i << 1);
+      sift(i << 1);
+    } else if (b == min) {
+      swap(i, (i << 1) + 1);
+      sift((i << 1) + 1);
+    }
+  }
+}
+
+template <class T>
+void HeapPriorityBasic<T>::swap(int a, int b) {
+  auto x = data.at(a);
+  data.at(a) = data.at(b);
+  data.at(b) = x;
+}
+
+template <class T>
 void HeapPriorityBasic<T>::_verify_all() {
   if (verify_all()) {
     cout << "Valid min-heap" << endl;

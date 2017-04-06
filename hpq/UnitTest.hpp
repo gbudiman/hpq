@@ -18,6 +18,8 @@ public:
   
 private:
   void test_heap_structure();
+  void test_take();
+  void test_put();
 };
 
 
