@@ -12,9 +12,12 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <tuple>
+#include <math.h>
+#include <string>
 
 #define DEFAULT_WORKLOAD_THREADS 32
-#define LOAD_ITERATION_LIMIT 64
+#define LOAD_ITERATION_LIMIT 256
 #define LOAD_DELAYED_START 100000 //microseconds
-#define LOAD_SLEEP 1024 // microseconds
+#define LOAD_SLEEP 0 // microseconds
 #endif /* main_h */

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0723907E1E95CD6B0026FF89 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723907D1E95CD6B0026FF89 /* main.cpp */; };
 		072390861E95CF190026FF89 /* Workload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 072390841E95CF190026FF89 /* Workload.cpp */; };
+		0723908D1E95EB120026FF89 /* HeapPriorityBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723908B1E95EB120026FF89 /* HeapPriorityBasic.cpp */; };
+		072390901E95F04E0026FF89 /* UnitTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723908E1E95F04E0026FF89 /* UnitTest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,6 +31,10 @@
 		072390841E95CF190026FF89 /* Workload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Workload.cpp; sourceTree = "<group>"; };
 		072390851E95CF190026FF89 /* Workload.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Workload.hpp; sourceTree = "<group>"; };
 		072390871E95CF280026FF89 /* main.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = main.hpp; sourceTree = "<group>"; };
+		0723908B1E95EB120026FF89 /* HeapPriorityBasic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeapPriorityBasic.cpp; sourceTree = "<group>"; };
+		0723908C1E95EB120026FF89 /* HeapPriorityBasic.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HeapPriorityBasic.hpp; sourceTree = "<group>"; };
+		0723908E1E95F04E0026FF89 /* UnitTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitTest.cpp; sourceTree = "<group>"; };
+		0723908F1E95F04E0026FF89 /* UnitTest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UnitTest.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +71,10 @@
 				072390871E95CF280026FF89 /* main.hpp */,
 				072390841E95CF190026FF89 /* Workload.cpp */,
 				072390851E95CF190026FF89 /* Workload.hpp */,
+				0723908B1E95EB120026FF89 /* HeapPriorityBasic.cpp */,
+				0723908C1E95EB120026FF89 /* HeapPriorityBasic.hpp */,
+				0723908E1E95F04E0026FF89 /* UnitTest.cpp */,
+				0723908F1E95F04E0026FF89 /* UnitTest.hpp */,
 			);
 			path = hpq;
 			sourceTree = "<group>";
@@ -126,6 +136,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0723908D1E95EB120026FF89 /* HeapPriorityBasic.cpp in Sources */,
+				072390901E95F04E0026FF89 /* UnitTest.cpp in Sources */,
 				072390861E95CF190026FF89 /* Workload.cpp in Sources */,
 				0723907E1E95CD6B0026FF89 /* main.cpp in Sources */,
 			);

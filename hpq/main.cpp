@@ -8,7 +8,9 @@
 
 #include "main.hpp"
 #include "Workload.hpp"
+#include "UnitTest.hpp"
 
 int main(int argc, const char * argv[]) {
-  Workload();
+  //Workload();
+  UnitTest();
 }

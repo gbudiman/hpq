@@ -32,7 +32,7 @@ void Workload::initialize_workload(int n) {
 
 void Workload::run(int id) {
   printf("Thread %d initialized\n", id);
-  this_thread::sleep_for(chrono::microseconds(LOAD_DELAYED_START));
+  this_thread::sleep_for(chrono::microseconds (LOAD_DELAYED_START));
   for (int i = 0; i < LOAD_ITERATION_LIMIT; i++) {
     printf("Thread %d Running\n", id);
     this_thread::sleep_for(chrono::microseconds(LOAD_SLEEP));
