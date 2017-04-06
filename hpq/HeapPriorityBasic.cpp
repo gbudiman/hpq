@@ -74,7 +74,39 @@ void HeapPriorityBasic<T>::_get_parent_priority(int i) {
 
 template <class T>
 int HeapPriorityBasic<T>::get_priority_at(int i) {
-  return get<1>(data.at(i));
+  return i < data.size() ? get<1>(data.at(i)) : -1;
+}
+
+template <class T>
+void HeapPriorityBasic<T>::_verify_all() {
+  if (verify_all()) {
+    cout << "Valid min-heap" << endl;
+  } else {
+    cout << "Invalid min-heap" << endl;
+  }
+}
+
+template <class T>
+bool HeapPriorityBasic<T>::verify_all() {
+  bool is_correct = true;
+  is_correct &= verify(1);
+  
+  return is_correct;
+}
+
+template <class T>
+bool HeapPriorityBasic<T>::verify(int i) {
+  bool is_correct = true;
+  
+  auto p = get_children_priority(i);
+  int c = get_priority_at(i);
+  int l = get<0>(p);
+  int r = get<1>(p);
+  
+  if (l != -1) { is_correct &= (c <= l) && verify(i << 1); }
+  if (r != -1) { is_correct &= (c <= r) && verify((i << 1) + 1); }
+  
+  return is_correct;
 }
 
 template <class T>

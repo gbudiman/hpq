@@ -26,6 +26,9 @@ public:
   std::tuple<int, int> get_children_priority(int i);
   void _get_children_priority(int i);
   int get_priority_at(int i);
+  void _verify_all();
+  bool verify_all();
+  bool verify(int i);
   
 private:
   std::vector<std::tuple<T, int>> data;
