@@ -16,8 +16,10 @@ class HeapPriorityBasic {
 public:
   HeapPriorityBasic();
   HeapPriorityBasic(std::vector<int> inits);
-  
   HeapPriorityBasic<T> load(std::vector<int> inits);
+  
+  bool equals(std::vector<int> cmps);
+  bool weak_equals(std::vector<int> cmps);
   
   void debug_print();
   int get_height();
@@ -28,11 +30,17 @@ public:
   int get_priority_at(int i);
   void _verify_all();
   bool verify_all();
+  bool verify_all(std::vector<int> cmps);
   bool verify(int i);
   
-  void take();
+  int peek_priority();
+  int take_priority();
+  std::tuple<T, int> peek();
+  std::tuple<T, int> take();
+  HeapPriorityBasic<T> remove();
   //void put(std::tuple<T, int> in);
-  void put(int i);
+  HeapPriorityBasic<T> put(int i);
+  int size();
 private:
   std::vector<std::tuple<T, int>> data;
   void initialize_data();
@@ -40,6 +48,8 @@ private:
   void sift(int i);
   void swap(int a, int b);
   void percolate(int i);
+  std::tuple<T, int> apply_removal();
+  bool is_empty();
   
 };
 

@@ -23,7 +23,7 @@ template <class T>
 HeapPriorityBasic<T> HeapPriorityBasic<T>::load(vector<int> inits) {
   initialize_data();
   
-  data.push_back(std::make_tuple('X', -1));
+  //data.push_back(std::make_tuple('X', -1));
   for (int i = 0; i < inits.size(); i++) {
     auto t = make_tuple('X', inits.at(i));
     data.push_back(t);
@@ -33,8 +33,50 @@ HeapPriorityBasic<T> HeapPriorityBasic<T>::load(vector<int> inits) {
 }
 
 template <class T>
+bool HeapPriorityBasic<T>::weak_equals(vector<int> cmps) {
+  // Weak equals requires the following to be true:
+  // - the root element to be equal to the first element in cmps
+  // - the heap structure to be valid
+  // - the length is equal
+  // - the heap contains identical data but not in any particular order
+  
+  int sum_cmps = 0;
+  int sum_heap = 0;
+  bool correct_root = peek_priority() == cmps.at(0);
+  
+  for (int i = 0; i < cmps.size(); i++) {
+    sum_cmps += cmps.at(i);
+  }
+  
+  for (int i = 1; i < data.size(); i++) {
+    sum_heap += get_priority_at(i);
+  }
+  
+  return verify_all() && (sum_cmps == sum_heap) && correct_root;
+}
+
+template <class T>
+bool HeapPriorityBasic<T>::equals(vector<int> cmps) {
+  bool result = true;
+  
+  if (data.size() - 1 != cmps.size()) { return false; }
+  
+  for (int i = 1; i < data.size(); i++) {
+    result &= get_priority_at(i) == cmps.at(i - 1);
+  }
+  
+  return result;
+}
+
+template <class T>
 void HeapPriorityBasic<T>::initialize_data() {
   data = std::vector<std::tuple<T, int>>();
+  data.push_back(make_tuple(NULL, -1));
+}
+
+template <class T>
+int HeapPriorityBasic<T>::size() {
+  return data.size();
 }
 
 template <class T>
@@ -62,7 +104,7 @@ void HeapPriorityBasic<T>::_get_children_priority(int i) {
 
 template <class T>
 int HeapPriorityBasic<T>::get_parent_priority(int i) {
-  return get_priority_at(i >> 1);
+  return i < data.size() ? get_priority_at(i >> 1) : -1;
 }
 
 template <class T>
@@ -78,9 +120,12 @@ int HeapPriorityBasic<T>::get_priority_at(int i) {
 }
 
 template <class T>
-void HeapPriorityBasic<T>::put(int i) {
+HeapPriorityBasic<T> HeapPriorityBasic<T>::put(int i) {
   data.push_back(make_tuple('X', i));
   percolate((int) data.size() - 1);
+  
+  if (SHOW_STEPS) { cout << " -> " << i << endl; _verify_all(); debug_print(); }
+  return *this;
 }
 
 template <class T>
@@ -95,15 +140,56 @@ void HeapPriorityBasic<T>::percolate(int i) {
 }
 
 template <class T>
-void HeapPriorityBasic<T>::take() {
-  last_to_first();
-  sift(1);
+int HeapPriorityBasic<T>::take_priority() {
+  return get<1>(take());
+}
+
+template <class T>
+int HeapPriorityBasic<T>::peek_priority() {
+  return get<1>(peek());
+}
+
+template <class T>
+HeapPriorityBasic<T> HeapPriorityBasic<T>::remove() {
+  if (!is_empty()) {
+    apply_removal();
+  }
+  
+  return *this;
+}
+
+template <class T>
+tuple<T, int> HeapPriorityBasic<T>::peek() {
+  if (is_empty()) { return make_tuple(NULL, -1); }
+  return data.at(1);
+}
+
+template <class T>
+tuple<T, int> HeapPriorityBasic<T>::take() {
+  if (is_empty()) { return make_tuple(NULL, -1); }
+  
+  return apply_removal();
 }
 
 template <class T>
 void HeapPriorityBasic<T>::last_to_first() {
   data.at(1) = data.at(data.size() - 1);
   data.pop_back();
+}
+
+template <class T>
+bool HeapPriorityBasic<T>::is_empty() {
+  return data.size() == 1;
+}
+
+template <class T>
+tuple<T, int> HeapPriorityBasic<T>::apply_removal() {
+  auto out = data.at(1);
+  last_to_first();
+  sift(1);
+  
+  if (SHOW_STEPS) { cout << " <- " << get<1>(out) << endl; _verify_all(); debug_print(); }
+  return out;
 }
 
 template <class T>
@@ -115,12 +201,22 @@ void HeapPriorityBasic<T>::sift(int i) {
   
   if (a != -1 && b != -1) {
     int min = std::min(a, b);
-    if (a == min) {
+    if (c > min && a == min) {
       swap(i, i << 1);
       sift(i << 1);
-    } else if (b == min) {
+    } else if (c > min && b == min) {
       swap(i, (i << 1) + 1);
       sift((i << 1) + 1);
+    }
+  } else if (a == -1 && b != -1) {
+    if (c > b) {
+      swap(i, (i << 1) + 1);
+      sift((i << 1) + 1);
+    }
+  } else if (a != -1 && b == -1) {
+    if (c > a) {
+      swap(i, i << 1);
+      sift(i << 1);
     }
   }
 }
@@ -137,6 +233,7 @@ void HeapPriorityBasic<T>::_verify_all() {
   if (verify_all()) {
     cout << "Valid min-heap" << endl;
   } else {
+    debug_print();
     cout << "Invalid min-heap" << endl;
   }
 }
@@ -147,6 +244,11 @@ bool HeapPriorityBasic<T>::verify_all() {
   is_correct &= verify(1);
   
   return is_correct;
+}
+
+template <class T>
+bool HeapPriorityBasic<T>::verify_all(vector<int> cmps) {
+  return verify(1) && equals(cmps);
 }
 
 template <class T>
