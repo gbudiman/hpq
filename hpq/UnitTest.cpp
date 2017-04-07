@@ -18,6 +18,7 @@ UnitTest::UnitTest() {
   test_take();*/
   
   //manual_integration();
+  //integration_test();
   stress_test();
 }
 
@@ -144,17 +145,11 @@ bool UnitTest::integration_test() {
     }
   }
   
+  sort(puts.begin(), puts.end());
+  sort(takes.begin(), takes.end());
   set_difference(puts.begin(), puts.end(), takes.begin(), takes.end(), inserter(diff, diff.begin()));
   
-  //for (auto i: diff) cout << i << ' ';
-  //cout << endl;
-  //h.debug_print();
-  if (!h.verify_all()) {
-    cout << s << endl;
-  }
-  //h._verify_all();
-  
-  return h.verify_all();
+  return h.verify_all() && h.identical_contents(diff);
 }
 
 void UnitTest::stress_test() {

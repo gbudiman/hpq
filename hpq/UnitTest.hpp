@@ -13,10 +13,10 @@
 #include "HeapPriorityBasic.hpp"
 
 #define PUT_TO_TAKE_RATIO 0.5f
-#define INTEGRATION_OPS 50000
+#define INTEGRATION_OPS 10000
 #define PRIORITY_MAX 500
 #define PRIORITY_MIN 1
-#define INTEGRATION_ITERATION 1000
+#define INTEGRATION_ITERATION 10000
 
 class UnitTest {
 public:

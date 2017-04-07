@@ -20,6 +20,7 @@ public:
   
   bool equals(std::vector<int> cmps);
   bool weak_equals(std::vector<int> cmps);
+  bool identical_contents(std::vector<int> cmps);
   
   void debug_print();
   int get_height();

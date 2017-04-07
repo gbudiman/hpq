@@ -33,6 +33,25 @@ HeapPriorityBasic<T> HeapPriorityBasic<T>::load(vector<int> inits) {
 }
 
 template <class T>
+bool HeapPriorityBasic<T>::identical_contents(vector<int> cmps) {
+  int sum_cmps = 0;
+  int sum_heap = 0;
+  
+  for (int i = 0; i < cmps.size(); i++) {
+    if (cmps.at(i) == -1) continue;
+    sum_cmps += cmps.at(i);
+  }
+  
+  for (int i = 1; i < data.size(); i++) {
+    int p = get_priority_at(i);
+    if (p == -1) continue;
+    sum_heap += p;
+  }
+  
+  return sum_cmps == sum_heap;
+}
+
+template <class T>
 bool HeapPriorityBasic<T>::weak_equals(vector<int> cmps) {
   // Weak equals requires the following to be true:
   // - the root element to be equal to the first element in cmps
@@ -40,19 +59,11 @@ bool HeapPriorityBasic<T>::weak_equals(vector<int> cmps) {
   // - the length is equal
   // - the heap contains identical data but not in any particular order
   
-  int sum_cmps = 0;
-  int sum_heap = 0;
+  
   bool correct_root = peek_priority() == cmps.at(0);
   
-  for (int i = 0; i < cmps.size(); i++) {
-    sum_cmps += cmps.at(i);
-  }
   
-  for (int i = 1; i < data.size(); i++) {
-    sum_heap += get_priority_at(i);
-  }
-  
-  return verify_all() && (sum_cmps == sum_heap) && correct_root;
+  return verify_all() && identical_contents(cmps) && correct_root;
 }
 
 template <class T>
