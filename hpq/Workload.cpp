@@ -19,52 +19,6 @@ Workload::Workload(HeapPriorityBasic<int> h, int n) {
 
 void Workload::initialize_workload(HeapPriorityBasic<int> h, int n) {
   srand(time(NULL));
-  //auto t0 = thread(&Workload::run, 0);
-  //t0.join();
-  /*loaders = vector<thread>(n);
-  this->h = h;
-  
-  for (int i = 0; i < n; i++) {
-    //thread t = move(thread(&Workload::run, i));
-    loaders.at(i) = move(thread(&Workload::run, i));
-  }
-
-  for (int i = 0; i < n; i++) {
-    loaders.at(i).join();
-  }*/
-}
-
-void Workload::run(int id) {
-  printf("Thread %d initialized\n", id);
-  this_thread::sleep_for(chrono::microseconds (LOAD_DELAYED_START));
-//  for (int i = 0; i < LOAD_ITERATION_LIMIT; i++) {
-//    printf("Thread %d Running\n", id);
-//    this_thread::sleep_for(chrono::microseconds(LOAD_SLEEP));
-//  }
-  
-  vector<int> puts = vector<int>();
-  vector<int> takes = vector<int>();
-  vector<int> diff = vector<int>();
-  
-  for (int i = 0; i < LOAD_ITERATION_LIMIT; i++) {
-    int operation = Workload::random_operation();
-    int priority;
-    int out;
-    
-    switch(operation) {
-      case 0:
-        priority = Workload::random_priority();
-        h.put(priority);
-        puts.push_back(priority);
-        //s += " -> " + to_string(priority) + "\n";
-        break;
-      case 1:
-        out = h.take_priority();
-        takes.push_back(out);
-        //s += " <- " + to_string(out) + "\n";
-        break;
-    }
-  }
 }
 
 int Workload::random_priority() {

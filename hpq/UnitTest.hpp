@@ -30,13 +30,9 @@ private:
   void manual_integration();
   bool integration_test();
   void stress_test();
-  void threaded_stress_test();
   
   void evaluate(bool b, std::string s);
   void evaluate_content(bool b);
-  
-  //static int random_priority();
-  //static int random_operation();
 };
 
 

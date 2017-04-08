@@ -246,7 +246,7 @@ void HeapPriorityBasic<T>::_verify_all() {
     cout << "Invalid min-heap";
   }
   
-  cout << " (" << size() << ") items" << endl;
+  cout << " (" << size() << " items)" << endl;
 }
 
 template <class T>

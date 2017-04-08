@@ -167,11 +167,6 @@ void UnitTest::stress_test() {
   cout << "Stress test " << (pass ? "PASSED" : "FAILED") << endl;
 }
 
-void UnitTest::threaded_stress_test() {
-  //HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
-  //Workload(HeapPriorityBasic<int>(h));
-}
-
 void UnitTest::evaluate(bool b, string s) {
   cout << "Test " << (b ? "passed" : "FAILED") << ": " << s << endl;
 }

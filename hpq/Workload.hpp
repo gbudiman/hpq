@@ -17,14 +17,11 @@ class Workload {
 public:
   Workload(HeapPriorityBasic<int>);
   Workload(HeapPriorityBasic<int>, int n);
-  void run(int id);
   static int random_priority();
   static int random_operation();
   
 private:
   void initialize_workload(HeapPriorityBasic<int>, int n);
-  std::vector<std::thread> loaders;
-  HeapPriorityBasic<int> h;
 };
 
 #endif /* Workload_hpp */
