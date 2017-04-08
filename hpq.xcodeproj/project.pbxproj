@@ -11,6 +11,7 @@
 		072390861E95CF190026FF89 /* Workload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 072390841E95CF190026FF89 /* Workload.cpp */; };
 		0723908D1E95EB120026FF89 /* HeapPriorityBasic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723908B1E95EB120026FF89 /* HeapPriorityBasic.cpp */; };
 		072390901E95F04E0026FF89 /* UnitTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723908E1E95F04E0026FF89 /* UnitTest.cpp */; };
+		07B826E91E986CEE00AEE274 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826E71E986CEE00AEE274 /* Node.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +36,8 @@
 		0723908C1E95EB120026FF89 /* HeapPriorityBasic.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HeapPriorityBasic.hpp; sourceTree = "<group>"; };
 		0723908E1E95F04E0026FF89 /* UnitTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UnitTest.cpp; sourceTree = "<group>"; };
 		0723908F1E95F04E0026FF89 /* UnitTest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UnitTest.hpp; sourceTree = "<group>"; };
+		07B826E71E986CEE00AEE274 /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Node.cpp; sourceTree = "<group>"; };
+		07B826E81E986CEE00AEE274 /* Node.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Node.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +78,8 @@
 				0723908C1E95EB120026FF89 /* HeapPriorityBasic.hpp */,
 				0723908E1E95F04E0026FF89 /* UnitTest.cpp */,
 				0723908F1E95F04E0026FF89 /* UnitTest.hpp */,
+				07B826E71E986CEE00AEE274 /* Node.cpp */,
+				07B826E81E986CEE00AEE274 /* Node.hpp */,
 			);
 			path = hpq;
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 				072390901E95F04E0026FF89 /* UnitTest.cpp in Sources */,
 				072390861E95CF190026FF89 /* Workload.cpp in Sources */,
 				0723907E1E95CD6B0026FF89 /* main.cpp in Sources */,
+				07B826E91E986CEE00AEE274 /* Node.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,6 +272,7 @@
 				072390831E95CD6B0026FF89 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

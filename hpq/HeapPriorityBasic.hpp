@@ -10,6 +10,7 @@
 #define HeapPriorityBasic_hpp
 
 #include "main.hpp"
+#include "Node.hpp"
 
 template <class T>
 class HeapPriorityBasic {
@@ -36,20 +37,20 @@ public:
   
   int peek_priority();
   int take_priority();
-  std::tuple<T, int> peek();
-  std::tuple<T, int> take();
+  Node<T> peek();
+  Node<T> take();
   HeapPriorityBasic<T> remove();
   //void put(std::tuple<T, int> in);
   HeapPriorityBasic<T> put(int i);
   int size();
 private:
-  std::vector<std::tuple<T, int>> data;
+  std::vector<Node<T>> data;
   void initialize_data();
   void last_to_first();
   void sift(int i);
   void swap(int a, int b);
   void percolate(int i);
-  std::tuple<T, int> apply_removal();
+  Node<T> apply_removal();
   bool is_empty();
   
 };

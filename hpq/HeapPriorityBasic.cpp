@@ -23,10 +23,8 @@ template <class T>
 HeapPriorityBasic<T> HeapPriorityBasic<T>::load(vector<int> inits) {
   initialize_data();
   
-  //data.push_back(std::make_tuple('X', -1));
   for (int i = 0; i < inits.size(); i++) {
-    auto t = make_tuple('X', inits.at(i));
-    data.push_back(t);
+    data.push_back(Node<T>(inits.at(i)));
   }
   
   return *this;
@@ -81,8 +79,8 @@ bool HeapPriorityBasic<T>::equals(vector<int> cmps) {
 
 template <class T>
 void HeapPriorityBasic<T>::initialize_data() {
-  data = std::vector<std::tuple<T, int>>();
-  data.push_back(make_tuple(NULL, -1));
+  data = vector<Node<T>>();
+  data.push_back(Node<T>());
 }
 
 template <class T>
@@ -127,12 +125,13 @@ void HeapPriorityBasic<T>::_get_parent_priority(int i) {
 
 template <class T>
 int HeapPriorityBasic<T>::get_priority_at(int i) {
-  return i < data.size() ? get<1>(data.at(i)) : -1;
+  return i < data.size() ? data.at(i).priority : -1;
+
 }
 
 template <class T>
 HeapPriorityBasic<T> HeapPriorityBasic<T>::put(int i) {
-  data.push_back(make_tuple('X', i));
+  data.push_back(Node<T>(i));
   percolate((int) data.size() - 1);
   
   if (SHOW_STEPS) { cout << " -> " << i << endl; _verify_all(); debug_print(); }
@@ -152,12 +151,12 @@ void HeapPriorityBasic<T>::percolate(int i) {
 
 template <class T>
 int HeapPriorityBasic<T>::take_priority() {
-  return get<1>(take());
+  return take().priority;
 }
 
 template <class T>
 int HeapPriorityBasic<T>::peek_priority() {
-  return get<1>(peek());
+  return peek().priority;
 }
 
 template <class T>
@@ -170,15 +169,14 @@ HeapPriorityBasic<T> HeapPriorityBasic<T>::remove() {
 }
 
 template <class T>
-tuple<T, int> HeapPriorityBasic<T>::peek() {
-  if (is_empty()) { return make_tuple(NULL, -1); }
+Node<T> HeapPriorityBasic<T>::peek() {
+  if (is_empty()) { return Node<T>(); }
   return data.at(1);
 }
 
 template <class T>
-tuple<T, int> HeapPriorityBasic<T>::take() {
-  if (is_empty()) { return make_tuple(NULL, -1); }
-  
+Node<T> HeapPriorityBasic<T>::take() {
+  if (is_empty()) { return Node<T>(); }
   return apply_removal();
 }
 
@@ -194,12 +192,12 @@ bool HeapPriorityBasic<T>::is_empty() {
 }
 
 template <class T>
-tuple<T, int> HeapPriorityBasic<T>::apply_removal() {
+Node<T> HeapPriorityBasic<T>::apply_removal() {
   auto out = data.at(1);
   last_to_first();
   sift(1);
   
-  if (SHOW_STEPS) { cout << " <- " << get<1>(out) << endl; _verify_all(); debug_print(); }
+  if (SHOW_STEPS) { cout << " <- " << out.priority << endl; _verify_all(); debug_print(); }
   return out;
 }
 
