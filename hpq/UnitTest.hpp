@@ -11,6 +11,7 @@
 
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
+#include "Workload.hpp"
 
 #define PUT_TO_TAKE_RATIO 0.5f
 #define INTEGRATION_OPS 10000
@@ -29,12 +30,13 @@ private:
   void manual_integration();
   bool integration_test();
   void stress_test();
+  void threaded_stress_test();
   
   void evaluate(bool b, std::string s);
   void evaluate_content(bool b);
   
-  int random_priority();
-  int random_operation();
+  //static int random_priority();
+  //static int random_operation();
 };
 
 

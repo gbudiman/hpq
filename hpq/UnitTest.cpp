@@ -11,15 +11,16 @@ using namespace std;
 
 UnitTest::UnitTest() {
   srand(time(NULL));
-  test_heap_structure();
+  /*test_heap_structure();
   test_take();
   test_put();
   
-  test_take();
+  test_take();*/
   
   //manual_integration();
   //integration_test();
-  stress_test();
+  //stress_test();
+  //threaded_stress_test();
 }
 
 void UnitTest::test_heap_structure() {
@@ -126,13 +127,13 @@ bool UnitTest::integration_test() {
   HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
   
   for (int i = 0; i < INTEGRATION_OPS; i++) {
-    int operation = random_operation();
+    int operation = Workload::random_operation();
     int priority;
     int out;
     
     switch(operation) {
       case 0:
-        priority = random_priority();
+        priority = Workload::random_priority();
         h.put(priority);
         puts.push_back(priority);
         s += " -> " + to_string(priority) + "\n";
@@ -166,15 +167,9 @@ void UnitTest::stress_test() {
   cout << "Stress test " << (pass ? "PASSED" : "FAILED") << endl;
 }
 
-int UnitTest::random_priority() {
-  return rand() % (PRIORITY_MAX - PRIORITY_MIN) + PRIORITY_MIN;
-}
-
-int UnitTest::random_operation() {
-  // Returns 1 = take();
-  //         0 = put();
-  int threshold = PUT_TO_TAKE_RATIO * RAND_MAX;
-  return rand() < threshold ? 0 : 1;
+void UnitTest::threaded_stress_test() {
+  //HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
+  //Workload(HeapPriorityBasic<int>(h));
 }
 
 void UnitTest::evaluate(bool b, string s) {

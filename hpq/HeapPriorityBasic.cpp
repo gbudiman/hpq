@@ -240,11 +240,13 @@ void HeapPriorityBasic<T>::swap(int a, int b) {
 template <class T>
 void HeapPriorityBasic<T>::_verify_all() {
   if (verify_all()) {
-    cout << "Valid min-heap" << endl;
+    cout << "Valid min-heap";
   } else {
     debug_print();
-    cout << "Invalid min-heap" << endl;
+    cout << "Invalid min-heap";
   }
+  
+  cout << " (" << size() << ") items" << endl;
 }
 
 template <class T>

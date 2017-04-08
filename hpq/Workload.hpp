@@ -10,16 +10,21 @@
 #define Workload_hpp
 
 #include "main.hpp"
+#include "HeapPriorityBasic.hpp"
+
 
 class Workload {
 public:
-  Workload();
-  Workload(int n);
-  static void run(int id);
+  Workload(HeapPriorityBasic<int>);
+  Workload(HeapPriorityBasic<int>, int n);
+  void run(int id);
+  static int random_priority();
+  static int random_operation();
   
 private:
-  void initialize_workload(int n);
+  void initialize_workload(HeapPriorityBasic<int>, int n);
   std::vector<std::thread> loaders;
+  HeapPriorityBasic<int> h;
 };
 
 #endif /* Workload_hpp */
