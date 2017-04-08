@@ -64,12 +64,12 @@ void run(int id) {
     }
     
     if (SHOW_PROGRESS && i % (LOAD_ITERATION_LIMIT / 10) == 0) {
-      printf("Thread %3d: %3.0f%% (%d/%d)\n", id, (float) i / LOAD_ITERATION_LIMIT * 100.0f, count_put, count_take);
+      printf("Thread %3d: %3.0f%% (%6d / %6d)\n", id, (float) i / LOAD_ITERATION_LIMIT * 100.0f, count_put, count_take);
     }
     this_thread::sleep_for(chrono::microseconds(LOAD_SLEEP == 0 ? 0 : rand() % LOAD_SLEEP));
   }
   
-  printf("Thread %d completed after %d/%d put/take\n", id, count_put, count_take);
+  printf("Thread %3d completed after %d/%d put/take\n", id, count_put, count_take);
 }
 
 void run_fine_grained(int id) {
@@ -129,7 +129,7 @@ void threaded_stress_test() {
   
   auto begin = chrono::high_resolution_clock::now();
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
-    threads.push_back(move(thread(run, i)));
+    threads.push_back(thread(run, i));
   }
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
@@ -148,7 +148,7 @@ void threaded_stress_test_concurrent() {
   vector<thread> threads = vector<thread>();
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
-    threads.push_back(move(thread(run_fine_grained, i)));
+    threads.push_back(thread(run_fine_grained, i));
   }
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
@@ -163,8 +163,8 @@ int main(int argc, const char * argv[]) {
   //Workload();
   //UnitTest();
   
-  //threaded_stress_test();
-  UnitTest();
+  threaded_stress_test();
+  //UnitTest();
 }
 
 

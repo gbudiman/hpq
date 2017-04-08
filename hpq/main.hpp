@@ -16,9 +16,10 @@
 #include <math.h>
 #include <string>
 #include <mutex>
+#include <algorithm>
 
 #define DEFAULT_WORKLOAD_THREADS 32
-#define LOAD_ITERATION_LIMIT 1000
+#define LOAD_ITERATION_LIMIT 5000
 #define LOAD_DELAYED_START 100000 //microseconds
 #define LOAD_PRIORITY_MAX 500
 #define LOAD_PRIORITY_MIN 1
@@ -26,6 +27,6 @@
 #define LOAD_SLEEP 0 // microseconds
 #define SHOW_STEPS 0
 #define DO_VALIDATE 1
-#define SHOW_PROGRESS 0
+#define SHOW_PROGRESS 1
 
 #endif /* main_h */
