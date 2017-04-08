@@ -21,6 +21,8 @@ UnitTest::UnitTest() {
   //integration_test();
   //stress_test();
   //threaded_stress_test();
+  
+  test_concurrent_put();
 }
 
 void UnitTest::test_heap_structure() {
@@ -91,6 +93,30 @@ void UnitTest::test_put() {
   evaluate(h.put(3).weak_equals(v2), "Follow-up put() operation");
   evaluate(h.put(5).weak_equals(v3), "Follow-up put() operation");
   evaluate(h.put(15).weak_equals(v4), "Follow-up put() operation");
+}
+
+void UnitTest::test_concurrent_put() {
+  HeapPriorityConcurrent<int> _hc = HeapPriorityConcurrent<int>();
+  auto hc = make_shared<HeapPriorityConcurrent<int>>(_hc);
+  vector<int> v0 = {7, 1, 2, 3, 4};
+  vector<int> v1 = {1, 7, 2, 4, 7};
+  vector<int> v2 = {9, 7, 8, 4, 3};
+  vector<int> v3 = {5, 6, 1, 6, 7};
+  
+  auto t0 = thread(&UnitTest::concurrent_runner, this, hc, v0);
+  auto t1 = thread(&UnitTest::concurrent_runner, this, hc, v1);
+  auto t2 = thread(&UnitTest::concurrent_runner, this, hc, v2);
+  auto t3 = thread(&UnitTest::concurrent_runner, this, hc, v3);
+  
+  t0.join(); t1.join(); t2.join(); t3.join();
+  hc->debug_print();
+  printf("EH?\n");
+}
+
+void UnitTest::concurrent_runner(shared_ptr<HeapPriorityConcurrent<int>> hc, vector<int> v) {
+  for (int i = 0; i < v.size(); i++) {
+    hc->cput(v.at(i));
+  }
 }
 
 void UnitTest::manual_integration() {

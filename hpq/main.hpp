@@ -27,4 +27,5 @@
 #define SHOW_STEPS 0
 #define DO_VALIDATE 1
 #define SHOW_PROGRESS 0
+
 #endif /* main_h */

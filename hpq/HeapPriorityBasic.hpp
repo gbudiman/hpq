@@ -43,7 +43,8 @@ public:
   //void put(std::tuple<T, int> in);
   HeapPriorityBasic<T> put(int i);
   int size();
-private:
+  
+protected:
   std::vector<Node<T>> data;
   void initialize_data();
   void last_to_first();

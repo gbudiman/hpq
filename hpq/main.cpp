@@ -10,9 +10,11 @@
 #include "Workload.hpp"
 #include "UnitTest.hpp"
 #include "HeapPriorityBasic.hpp"
+#include "HeapPriorityConcurrent.hpp"
 using namespace std;
 
 HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
+HeapPriorityConcurrent<int> hc = HeapPriorityConcurrent<int>();
 vector<int> hputs = vector<int>();
 vector<int> htakes = vector<int>();
 vector<int> hdiff = vector<int>();
@@ -70,6 +72,46 @@ void run(int id) {
   printf("Thread %d completed after %d/%d put/take\n", id, count_put, count_take);
 }
 
+void run_fine_grained(int id) {
+  int count_put = 0;
+  int count_take = 0;
+  
+  for (int i = 0; i < LOAD_ITERATION_LIMIT; i++) {
+    int operation = Workload::random_operation();
+    int priority;
+    int out;
+    
+    switch(operation) {
+      case 0:
+        priority = Workload::random_priority();
+        lock_h.lock();
+        hc.put(priority);
+        lock_h.unlock();
+        
+        if (DO_VALIDATE) {
+          lock_hputs.lock();
+          hputs.push_back(priority);
+          lock_hputs.unlock();
+        }
+        count_put++;
+        
+        break;
+      case 1:
+        lock_h.lock();
+        out = hc.take_priority();
+        lock_h.unlock();
+        
+        if (DO_VALIDATE) {
+          lock_htakes.lock();
+          htakes.push_back(out);
+          lock_htakes.unlock();
+        }
+        count_take++;
+        break;
+    }
+  }
+}
+
 void verify_threaded_run() {
   sort(hputs.begin(), hputs.end());
   sort(htakes.begin(), htakes.end());
@@ -90,7 +132,7 @@ void threaded_stress_test() {
     threads.push_back(move(thread(run, i)));
   }
   
-  for (int i = 0;i < DEFAULT_WORKLOAD_THREADS; i++) {
+  for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
     threads.at(i).join();
   }
   
@@ -102,12 +144,27 @@ void threaded_stress_test() {
   printf("Run takes %.2llu ms\n", time_diff);
 }
 
+void threaded_stress_test_concurrent() {
+  vector<thread> threads = vector<thread>();
+  
+  for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
+    threads.push_back(move(thread(run_fine_grained, i)));
+  }
+  
+  for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
+    threads.at(i).join();
+  }
+  
+  hc._verify_all();
+}
+
 int main(int argc, const char * argv[]) {
   srand(time(NULL));
   //Workload();
   //UnitTest();
   
-  threaded_stress_test();
+  //threaded_stress_test();
+  UnitTest();
 }
 
 

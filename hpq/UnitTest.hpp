@@ -11,6 +11,7 @@
 
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
+#include "HeapPriorityConcurrent.hpp"
 #include "Workload.hpp"
 
 #define PUT_TO_TAKE_RATIO 0.5f
@@ -27,12 +28,15 @@ private:
   void test_heap_structure();
   void test_take();
   void test_put();
+  void test_concurrent_put();
   void manual_integration();
   bool integration_test();
   void stress_test();
   
   void evaluate(bool b, std::string s);
   void evaluate_content(bool b);
+  
+  void concurrent_runner(std::shared_ptr<HeapPriorityConcurrent<int>> hc, std::vector<int> v);
 };
 
 

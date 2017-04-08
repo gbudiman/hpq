@@ -15,13 +15,8 @@
 
 class Workload {
 public:
-  Workload(HeapPriorityBasic<int>);
-  Workload(HeapPriorityBasic<int>, int n);
   static int random_priority();
   static int random_operation();
-  
-private:
-  void initialize_workload(HeapPriorityBasic<int>, int n);
 };
 
 #endif /* Workload_hpp */

@@ -9,18 +9,6 @@
 #include "Workload.hpp"
 using namespace std;
 
-Workload::Workload(HeapPriorityBasic<int> h) {
-  initialize_workload(h, DEFAULT_WORKLOAD_THREADS);
-}
-
-Workload::Workload(HeapPriorityBasic<int> h, int n) {
-  initialize_workload(h, n);
-}
-
-void Workload::initialize_workload(HeapPriorityBasic<int> h, int n) {
-  srand(time(NULL));
-}
-
 int Workload::random_priority() {
   return rand() % (LOAD_PRIORITY_MAX - LOAD_PRIORITY_MIN) + LOAD_PRIORITY_MIN;
 }
