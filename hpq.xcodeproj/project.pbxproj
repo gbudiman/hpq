@@ -13,6 +13,8 @@
 		072390901E95F04E0026FF89 /* UnitTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0723908E1E95F04E0026FF89 /* UnitTest.cpp */; };
 		07B826E91E986CEE00AEE274 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826E71E986CEE00AEE274 /* Node.cpp */; };
 		07B826EC1E988EE500AEE274 /* HeapPriorityConcurrent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826EA1E988EE500AEE274 /* HeapPriorityConcurrent.cpp */; };
+		07B826F01E9AC51900AEE274 /* HeapPriorityBitBang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826EE1E9AC51900AEE274 /* HeapPriorityBitBang.cpp */; };
+		07B826F61E9AC59E00AEE274 /* NodeBitBang.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826F41E9AC59E00AEE274 /* NodeBitBang.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -42,6 +44,10 @@
 		07B826EA1E988EE500AEE274 /* HeapPriorityConcurrent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeapPriorityConcurrent.cpp; sourceTree = "<group>"; };
 		07B826EB1E988EE500AEE274 /* HeapPriorityConcurrent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HeapPriorityConcurrent.hpp; sourceTree = "<group>"; };
 		07B826ED1E98988C00AEE274 /* Lock.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Lock.hpp; sourceTree = "<group>"; };
+		07B826EE1E9AC51900AEE274 /* HeapPriorityBitBang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeapPriorityBitBang.cpp; sourceTree = "<group>"; };
+		07B826EF1E9AC51900AEE274 /* HeapPriorityBitBang.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HeapPriorityBitBang.hpp; sourceTree = "<group>"; };
+		07B826F41E9AC59E00AEE274 /* NodeBitBang.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NodeBitBang.cpp; sourceTree = "<group>"; };
+		07B826F51E9AC59E00AEE274 /* NodeBitBang.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NodeBitBang.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +93,10 @@
 				07B826EA1E988EE500AEE274 /* HeapPriorityConcurrent.cpp */,
 				07B826EB1E988EE500AEE274 /* HeapPriorityConcurrent.hpp */,
 				07B826ED1E98988C00AEE274 /* Lock.hpp */,
+				07B826EE1E9AC51900AEE274 /* HeapPriorityBitBang.cpp */,
+				07B826EF1E9AC51900AEE274 /* HeapPriorityBitBang.hpp */,
+				07B826F41E9AC59E00AEE274 /* NodeBitBang.cpp */,
+				07B826F51E9AC59E00AEE274 /* NodeBitBang.hpp */,
 			);
 			path = hpq;
 			sourceTree = "<group>";
@@ -153,6 +163,8 @@
 				07B826EC1E988EE500AEE274 /* HeapPriorityConcurrent.cpp in Sources */,
 				072390861E95CF190026FF89 /* Workload.cpp in Sources */,
 				0723907E1E95CD6B0026FF89 /* main.cpp in Sources */,
+				07B826F61E9AC59E00AEE274 /* NodeBitBang.cpp in Sources */,
+				07B826F01E9AC51900AEE274 /* HeapPriorityBitBang.cpp in Sources */,
 				07B826E91E986CEE00AEE274 /* Node.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

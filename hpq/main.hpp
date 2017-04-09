@@ -17,6 +17,7 @@
 #include <string>
 #include <mutex>
 #include <algorithm>
+#include <atomic>
 
 #define DEFAULT_WORKLOAD_THREADS 32
 #define LOAD_ITERATION_LIMIT 5000

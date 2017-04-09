@@ -163,8 +163,8 @@ int main(int argc, const char * argv[]) {
   //Workload();
   //UnitTest();
   
-  threaded_stress_test();
-  //UnitTest();
+  //threaded_stress_test();
+  UnitTest();
 }
 
 

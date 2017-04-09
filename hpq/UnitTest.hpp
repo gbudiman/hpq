@@ -11,7 +11,7 @@
 
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
-#include "HeapPriorityConcurrent.hpp"
+#include "HeapPriorityBitBang.hpp"
 #include "Workload.hpp"
 
 #define PUT_TO_TAKE_RATIO 0.5f
@@ -36,7 +36,7 @@ private:
   void evaluate(bool b, std::string s);
   void evaluate_content(bool b);
   
-  void concurrent_runner(std::shared_ptr<HeapPriorityConcurrent<int>> hc, std::vector<int> v);
+  void concurrent_runner(std::shared_ptr<HeapPriorityBitBang> hc, std::vector<int> v);
 };
 
 

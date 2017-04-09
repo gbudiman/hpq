@@ -96,8 +96,8 @@ void UnitTest::test_put() {
 }
 
 void UnitTest::test_concurrent_put() {
-  HeapPriorityConcurrent<int> _hc = HeapPriorityConcurrent<int>();
-  auto hc = make_shared<HeapPriorityConcurrent<int>>(_hc);
+  HeapPriorityBitBang _hc = HeapPriorityBitBang();
+  auto hc = make_shared<HeapPriorityBitBang>(_hc);
   vector<int> v0 = {7, 1, 2, 3, 4};
   vector<int> v1 = {1, 7, 2, 4, 7};
   vector<int> v2 = {9, 7, 8, 4, 3};
@@ -113,9 +113,9 @@ void UnitTest::test_concurrent_put() {
   printf("EH?\n");
 }
 
-void UnitTest::concurrent_runner(shared_ptr<HeapPriorityConcurrent<int>> hc, vector<int> v) {
+void UnitTest::concurrent_runner(shared_ptr<HeapPriorityBitBang> hc, vector<int> v) {
   for (int i = 0; i < v.size(); i++) {
-    hc->cput(v.at(i));
+    hc->put(v.at(i));
   }
 }
 
