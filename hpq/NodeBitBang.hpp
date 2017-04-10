@@ -9,21 +9,26 @@
 #ifndef NodeBitBang_hpp
 #define NodeBitBang_hpp
 
-#define DEFAULT_NODE 0xFFFFFFFF00000000
-
 #include "main.hpp"
 
 class NodeBitBang {
 public:
   NodeBitBang();
   NodeBitBang(const NodeBitBang& other);
+  long int get();
+  
   NodeBitBang(uint16_t priority);
+  
+  static long int wrap(uint16_t priority, uint8_t thread_id);
   
   uint32_t item();
   uint16_t priority();
   uint8_t owner();
   bool is_owner(uint8_t thread_id);
   bool is_marked();
+  
+  void lock(uint8_t thread_id);
+  void release(uint8_t thread_id);
   
   std::atomic<long int> data;
 };

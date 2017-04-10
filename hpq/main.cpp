@@ -10,11 +10,11 @@
 #include "Workload.hpp"
 #include "UnitTest.hpp"
 #include "HeapPriorityBasic.hpp"
-#include "HeapPriorityConcurrent.hpp"
+#include "HeapPriorityBitBang.hpp"
 using namespace std;
 
 HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
-HeapPriorityConcurrent<int> hc = HeapPriorityConcurrent<int>();
+HeapPriorityBitBang hc = HeapPriorityBitBang();
 vector<int> hputs = vector<int>();
 vector<int> htakes = vector<int>();
 vector<int> hdiff = vector<int>();
@@ -72,6 +72,7 @@ void run(int id) {
   printf("Thread %3d completed after %d/%d put/take\n", id, count_put, count_take);
 }
 
+/*
 void run_fine_grained(int id) {
   int count_put = 0;
   int count_take = 0;
@@ -79,7 +80,7 @@ void run_fine_grained(int id) {
   for (int i = 0; i < LOAD_ITERATION_LIMIT; i++) {
     int operation = Workload::random_operation();
     int priority;
-    int out;
+    uint16_t out;
     
     switch(operation) {
       case 0:
@@ -110,7 +111,7 @@ void run_fine_grained(int id) {
         break;
     }
   }
-}
+}*/
 
 void verify_threaded_run() {
   sort(hputs.begin(), hputs.end());
@@ -144,7 +145,7 @@ void threaded_stress_test() {
   printf("Run takes %.2llu ms\n", time_diff);
 }
 
-void threaded_stress_test_concurrent() {
+/*void threaded_stress_test_concurrent() {
   vector<thread> threads = vector<thread>();
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
@@ -156,7 +157,7 @@ void threaded_stress_test_concurrent() {
   }
   
   hc._verify_all();
-}
+}*/
 
 int main(int argc, const char * argv[]) {
   srand(time(NULL));

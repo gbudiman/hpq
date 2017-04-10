@@ -36,7 +36,7 @@ private:
   void evaluate(bool b, std::string s);
   void evaluate_content(bool b);
   
-  void concurrent_runner(std::shared_ptr<HeapPriorityBitBang> hc, std::vector<int> v);
+  void concurrent_runner(std::shared_ptr<HeapPriorityBitBang> hc, std::vector<int> v, uint8_t thread_id);
 };
 
 

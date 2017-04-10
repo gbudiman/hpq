@@ -98,25 +98,27 @@ void UnitTest::test_put() {
 void UnitTest::test_concurrent_put() {
   HeapPriorityBitBang _hc = HeapPriorityBitBang();
   auto hc = make_shared<HeapPriorityBitBang>(_hc);
-  vector<int> v0 = {7, 1, 2, 3, 4};
-  vector<int> v1 = {1, 7, 2, 4, 7};
-  vector<int> v2 = {9, 7, 8, 4, 3};
-  vector<int> v3 = {5, 6, 1, 6, 7};
+  vector<int> v0 = { 7, 1, 2, 3, 4};
+  vector<int> v1 = { 5, 6, 9, 8,27};
+  vector<int> v2 = {11,17,18,14,13};
+  vector<int> v3 = {35,36,31,36,37};
   
-  auto t0 = thread(&UnitTest::concurrent_runner, this, hc, v0);
-  auto t1 = thread(&UnitTest::concurrent_runner, this, hc, v1);
-  auto t2 = thread(&UnitTest::concurrent_runner, this, hc, v2);
-  auto t3 = thread(&UnitTest::concurrent_runner, this, hc, v3);
+  auto t0 = thread(&UnitTest::concurrent_runner, this, hc, v0, 0);
+  auto t1 = thread(&UnitTest::concurrent_runner, this, hc, v1, 1);
+  auto t2 = thread(&UnitTest::concurrent_runner, this, hc, v2, 2);
+  auto t3 = thread(&UnitTest::concurrent_runner, this, hc, v3, 3);
   
   t0.join(); t1.join(); t2.join(); t3.join();
   hc->debug_print();
-  printf("EH?\n");
+  hc->_verify_all();
 }
 
-void UnitTest::concurrent_runner(shared_ptr<HeapPriorityBitBang> hc, vector<int> v) {
+void UnitTest::concurrent_runner(shared_ptr<HeapPriorityBitBang> hc, vector<int> v, uint8_t thread_id) {
   for (int i = 0; i < v.size(); i++) {
-    hc->put(v.at(i));
+    hc->put(v.at(i), thread_id);
   }
+  
+  printf("!!!Thread %d completed run\n", thread_id);
 }
 
 void UnitTest::manual_integration() {
