@@ -20,12 +20,10 @@ bool AtomicWrapper::is_busy() {
   return val.load();
 }
 
-bool AtomicWrapper::set_busy() {
-  auto old_val = val.load();
-  return val.compare_exchange_strong(old_val, true);
+bool AtomicWrapper::set_busy(bool expectation) {
+  return val.compare_exchange_strong(expectation, true);
 }
 
-bool AtomicWrapper::set_free() {
-  auto old_val = val.load();
-  return val.compare_exchange_strong(old_val, false);
+bool AtomicWrapper::set_free(bool expectation) {
+  return val.compare_exchange_strong(expectation, false);
 }

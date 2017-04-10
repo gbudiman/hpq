@@ -27,11 +27,15 @@ public:
   void debug_print();
   void _verify_all();
   bool verify_all();
+  std::tuple<bool, int> verify_all_with_size();
   
   std::mutex overlord_mutex;
 private:
   int get_min_dist_index();
   std::unordered_map<int, Node<int>> peek_dist();
+  
+  HeapPriorityBasic<int> dist_safe_access(int id);
+  AtomicWrapper busy_safe_access(int id);
   
   std::unordered_map<int, HeapPriorityBasic<int>> dist;
   std::unordered_map<int, AtomicWrapper> busy;

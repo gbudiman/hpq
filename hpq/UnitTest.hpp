@@ -11,7 +11,6 @@
 
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
-#include "HeapPriorityBitBang.hpp"
 #include "HeapPriorityDistributed.hpp"
 #include "Workload.hpp"
 
@@ -36,8 +35,6 @@ private:
   
   void evaluate(bool b, std::string s);
   void evaluate_content(bool b);
-  
-  void concurrent_runner(std::shared_ptr<HeapPriorityBitBang> hc, std::vector<int> v, uint8_t thread_id);
   
   void test_distributed();
   void distributed_runner(std::shared_ptr<HeapPriorityDistributed> hd, std::vector<int> v, uint8_t thread_id);

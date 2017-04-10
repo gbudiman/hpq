@@ -16,8 +16,8 @@ public:
   AtomicWrapper();
   AtomicWrapper(const AtomicWrapper& other);
   bool is_busy();
-  bool set_busy();
-  bool set_free();
+  bool set_busy(bool expectation);
+  bool set_free(bool expectation);
   
 private:
   std::atomic_bool val;
