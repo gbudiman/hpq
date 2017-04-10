@@ -10,11 +10,11 @@
 #include "Workload.hpp"
 #include "UnitTest.hpp"
 #include "HeapPriorityBasic.hpp"
-#include "HeapPriorityBitBang.hpp"
+#include "HeapPriorityDistributed.hpp"
 using namespace std;
 
 HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
-HeapPriorityBitBang hc = HeapPriorityBitBang();
+HeapPriorityDistributed hd = HeapPriorityDistributed();
 vector<int> hputs = vector<int>();
 vector<int> htakes = vector<int>();
 vector<int> hdiff = vector<int>();
@@ -72,8 +72,7 @@ void run(int id) {
   printf("Thread %3d completed after %d/%d put/take\n", id, count_put, count_take);
 }
 
-/*
-void run_fine_grained(int id) {
+void run_distributed(int id) {
   int count_put = 0;
   int count_take = 0;
   
@@ -85,9 +84,7 @@ void run_fine_grained(int id) {
     switch(operation) {
       case 0:
         priority = Workload::random_priority();
-        lock_h.lock();
-        hc.put(priority);
-        lock_h.unlock();
+        hd.put(priority, id);
         
         if (DO_VALIDATE) {
           lock_hputs.lock();
@@ -98,10 +95,8 @@ void run_fine_grained(int id) {
         
         break;
       case 1:
-        lock_h.lock();
-        out = hc.take_priority();
-        lock_h.unlock();
-        
+        out = hd.take_priority(id);
+
         if (DO_VALIDATE) {
           lock_htakes.lock();
           htakes.push_back(out);
@@ -110,8 +105,14 @@ void run_fine_grained(int id) {
         count_take++;
         break;
     }
+    
+    if (SHOW_PROGRESS && i % (LOAD_ITERATION_LIMIT / 10) == 0) {
+      printf("Thread %3d: %3.0f%% (%6d / %6d)\n", id, (float) i / LOAD_ITERATION_LIMIT * 100.0f, count_put, count_take);
+    }
   }
-}*/
+  
+  printf("Thread %3d completed its run\n", id);
+}
 
 void verify_threaded_run() {
   sort(hputs.begin(), hputs.end());
@@ -142,30 +143,31 @@ void threaded_stress_test() {
   if (DO_VALIDATE) { verify_threaded_run(); }
   
   auto time_diff = chrono::duration_cast<chrono::milliseconds>(end - begin);
-  printf("Run takes %.2llu ms\n", time_diff);
+  printf("Run takes %.2lu ms\n", time_diff);
 }
 
-/*void threaded_stress_test_concurrent() {
+void threaded_stress_test_distributed() {
   vector<thread> threads = vector<thread>();
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
-    threads.push_back(thread(run_fine_grained, i));
+    threads.push_back(thread(run_distributed, i));
   }
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
     threads.at(i).join();
   }
   
-  hc._verify_all();
-}*/
+  hd._verify_all();
+}
 
 int main(int argc, const char * argv[]) {
   srand(time(NULL));
   //Workload();
   //UnitTest();
   
-  //threaded_stress_test();
-  UnitTest();
+  //threaded_stress_test_concurrent();
+  //UnitTest();
+  threaded_stress_test_distributed();
 }
 
 

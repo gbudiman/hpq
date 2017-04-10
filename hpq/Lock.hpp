@@ -11,5 +11,6 @@
 
 std::mutex vector_push;
 std::mutex vector_pop;
+std::mutex vector_mod;
 
 #endif /* Lock_h */

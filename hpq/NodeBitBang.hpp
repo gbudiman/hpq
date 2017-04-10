@@ -27,7 +27,8 @@ public:
   bool is_owner(uint8_t thread_id);
   bool is_marked();
   
-  void lock(uint8_t thread_id);
+  bool lock(uint8_t thread_id);
+  //void release(uint8_t thread_id, int mode);
   void release(uint8_t thread_id);
   
   std::atomic<long int> data;

@@ -17,7 +17,7 @@ class HeapPriorityBitBang {
 public:
   HeapPriorityBitBang();
   
-  HeapPriorityBitBang put(uint16_t priority, uint8_t thread_id);
+  void put(uint16_t priority, uint8_t thread_id);
   //HeapPriorityBitBang put(uint32_t item, uint16_t priority);
   int size();
   
@@ -38,7 +38,7 @@ private:
   void percolate(int i, uint8_t thread_id);
   void swap(int a, int b, uint8_t thread_id);
   
-  void lock(int i, uint8_t thread_id);
+  bool lock(int i, uint8_t thread_id);
   void release(int i, uint8_t thread_id);
   
   uint16_t get_parent_priority(int i);

@@ -22,7 +22,8 @@ UnitTest::UnitTest() {
   //stress_test();
   //threaded_stress_test();
   
-  test_concurrent_put();
+  //test_concurrent_put();
+  test_distributed();
 }
 
 void UnitTest::test_heap_structure() {
@@ -193,6 +194,38 @@ void UnitTest::stress_test() {
   }
   
   cout << "Stress test " << (pass ? "PASSED" : "FAILED") << endl;
+}
+
+void UnitTest::test_distributed() {
+  HeapPriorityDistributed _hd = HeapPriorityDistributed();
+  
+  auto hd = make_shared<HeapPriorityDistributed>(_hd);
+  vector<int> v0 = { 7,11, 2, 3, 4};
+  vector<int> v1 = { 5, 6, 9, 8,27};
+  vector<int> v2 = {11,17,18,14,13};
+  vector<int> v3 = {35,36,31,36,37};
+  
+  auto t0 = thread(&UnitTest::distributed_runner, this, hd, v0, 0);
+  auto t1 = thread(&UnitTest::distributed_runner, this, hd, v1, 1);
+  auto t2 = thread(&UnitTest::distributed_runner, this, hd, v2, 2);
+  auto t3 = thread(&UnitTest::distributed_runner, this, hd, v3, 3);
+  
+  t0.join(); t1.join(); t2.join(); t3.join();
+  
+  auto z = hd->peek();
+  cout << hd->peek().priority << endl;;
+  //hd->debug_print();
+  hd->take(0);
+  //hd->debug_print();
+  hd->_verify_all();
+}
+
+void UnitTest::distributed_runner(shared_ptr<HeapPriorityDistributed> hd, vector<int> v, uint8_t thread_id) {
+  for (int i = 0; i < v.size(); i++) {
+    hd->put(v.at(i), thread_id);
+  }
+  
+  printf("!!!Thread %d completed run\n", thread_id);
 }
 
 void UnitTest::evaluate(bool b, string s) {

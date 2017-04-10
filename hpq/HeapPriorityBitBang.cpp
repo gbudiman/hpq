@@ -14,7 +14,7 @@ HeapPriorityBitBang::HeapPriorityBitBang() {
   initiallize_data();
 }
 
-HeapPriorityBitBang HeapPriorityBitBang::put(uint16_t priority, uint8_t thread_id) {
+void HeapPriorityBitBang::put(uint16_t priority, uint8_t thread_id) {
   while (1) {
     vector_push.lock();
       auto insert_position = data.size();
@@ -24,7 +24,7 @@ HeapPriorityBitBang HeapPriorityBitBang::put(uint16_t priority, uint8_t thread_i
     
     long int new_value = NodeBitBang::wrap(priority, thread_id);
     if (data.at(insert_position).data.compare_exchange_strong(new_node_data, new_value)) {
-      printf("Thread %d: inserting %d to index %lu\n", thread_id, priority, insert_position);
+      printf(">>> Thread %d: inserting %X to index %lu\n", thread_id, priority, insert_position);
       percolate((int) insert_position, thread_id);
       break;
     } else {
@@ -33,55 +33,81 @@ HeapPriorityBitBang HeapPriorityBitBang::put(uint16_t priority, uint8_t thread_i
     
   }
   
-  return *this;
+  //return *this;
 }
 
 void HeapPriorityBitBang::percolate(int i, uint8_t thread_id) {
+  printf("    Thread %d percolating at index %d\n", thread_id, i);
+  
   if (i == 1) {
-    data.at(i).release(thread_id);
-    printf(">>> Thread %d: insert complete (%d)\n", thread_id, data.at(i).priority());
+    release(i, thread_id);
     return;
   }
   
-  printf("Thread %d: percolating index %d\n", thread_id, i);
   uint16_t p = get_parent_priority(i);
   uint16_t c = get_priority_at(i);
   
   if (p > c) {
-    //printf("<-> [T %d] Swap %d (%d) <-> %d (%d)\n", thread_id, i, data.at(i).priority(), i >> 1, data.at(i >> 1).priority());
-    swap(i, i >> 1, thread_id);
-    //printf("<-> [T %d] NRes %d (%d) <-> %d (%d)\n", thread_id, i, data.at(i).priority(), i >> 1, data.at(i >> 1).priority());
-    percolate(i >> 1, thread_id);
-  } else {
-    data.at(i).release(thread_id);
-    printf(">>> Thread %d: insert complete (%d)\n", thread_id, data.at(i).priority());
+    swap(i >> 1, i, thread_id);
   }
+  
+  while (!data.at(i).owner()) {
+    printf("zzz Thread %d waiting for percolation at node %d\n", thread_id, i);
+    this_thread::sleep_for(chrono::milliseconds(100));
+  }
+  release(i, thread_id);
+  percolate(i >> 1, thread_id);
 }
 
 void HeapPriorityBitBang::swap(int a, int b, uint8_t thread_id) {
-  //printf("<-> Thread %d attempting to lock %d and %d\n", thread_id, a, b);
-  lock(a, thread_id);
-  lock(b, thread_id);
-
-  //printf("<-> Thread %d acquired lock on %d and %d\n", thread_id, a, b);
+  bool parent_locked = false;
+  bool child_locked = false;
+  
+  printf("<.> Thread %d attempting to lock %d and lock %d\n", thread_id, a, b);
+  
+  while (!parent_locked) {
+    parent_locked = lock(a, thread_id);
+    printf("<.> Thread %d can't lock parent %d, spinwaiting\n", thread_id, a);
+    this_thread::sleep_for(chrono::milliseconds(100));
+  }
+  
+  printf("</> Thread %d locked parent %d\n", thread_id, a);
+  
+  while (!child_locked) {
+    child_locked = lock(b, thread_id);
+    /*printf("<.> Thread %d can't lock child %d (owned by %d), spinwaiting\n", thread_id, b, data.at(b).owner());*/
+    this_thread::sleep_for(chrono::milliseconds(100));
+  }
+  
+  printf("<V> Thread %d locked parent %d and child %d\n", thread_id, a, b);
+  
   auto data_a = data.at(a).data.load();
   auto data_b = data.at(b).data.load();
-  //printf("<-> Exchanging %ld with %ld\n", data_a, data_b);
+  bool success_a = false;
+  bool success_b = false;
   
-  data.at(a).data.store(data_b);
-  data.at(b).data.store(data_a);
+  if (data.at(a).data.compare_exchange_strong(data_a, data_b)) {
+    success_a = true;
+  }
   
-  release(a, thread_id);
-  release(b, thread_id);
+  if (data.at(b).data.compare_exchange_strong(data_b, data_a)) {
+    success_b = true;
+  }
   
-  //printf("<-> Thread %d released lock on %d and %d\n", thread_id, a, b);
+  if (success_a && success_b) {
+    printf("<V> Thread %d swap successful\n", thread_id);
+    release(a, thread_id);
+    release(b, thread_id);
+    printf("< > Thread %d released %d and released %d\n", thread_id, a, b);
+  }
 }
 
-void HeapPriorityBitBang::lock(int i, uint8_t thread_id) {
-  data.at(i).lock(thread_id);
+bool HeapPriorityBitBang::lock(int i, uint8_t thread_id) {
+  return data.at(i).lock(thread_id);
 }
 
 void HeapPriorityBitBang::release(int i, uint8_t thread_id) {
+  //printf("    Thread %d attempting to release node %d\n", thread_id, i);
   data.at(i).release(thread_id);
 }
 
@@ -136,7 +162,7 @@ void HeapPriorityBitBang::_verify_all() {
   if (verify_all()) {
     cout << "Valid min-heap";
   } else {
-    debug_print();
+    //debug_print();
     cout << "Invalid min-heap";
   }
   
