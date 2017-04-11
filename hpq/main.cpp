@@ -87,11 +87,11 @@ void run_h2(int id) {
       case 0:
         priority = Workload::random_priority();
         h2.put(id, priority);
-        printf("<< %d\n", priority);
+        printf("   %5d\n", priority);
         
         if (DO_VALIDATE) {
           lock_hputs.lock();
-          hputs.push_back(priority);
+          //cv.record(OP_PUT, priority);
           lock_hputs.unlock();
         }
         count_put++;
@@ -99,11 +99,11 @@ void run_h2(int id) {
         break;
       case 1:
         out = h2.take_priority();
-        printf(">> %d\n", out);
+        printf(">> %10d\n", out);
         
         if (DO_VALIDATE) {
           lock_htakes.lock();
-          htakes.push_back(out);
+          //cv.record(OP_TAKE, out);
           lock_htakes.unlock();
         }
         count_take++;
@@ -118,9 +118,10 @@ void run_h2(int id) {
   
   printf("Thread %3d completed after %d/%d put/take\n", id, count_put, count_take);
   
-  for (int i = 0; i < htakes.size(); i++) {
+  /*for (int i = 0; i < htakes.size(); i++) {
     printf("%d\n", htakes.at(i));
-  }
+  }*/
+  //cv.verify_all();
 }
 
 void verify_threaded_run() {

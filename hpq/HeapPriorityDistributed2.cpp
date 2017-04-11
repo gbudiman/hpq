@@ -51,6 +51,7 @@ Node<int> HeapPriorityDistributed2::take() {
   mutexes.at(index).lock();
   Node<int> out = dist.at(index).take();
   auto new_min = dist.at(index).peek_priority();
+  if (new_min == -1) { new_min = __INT_MAX__; }
   mutexes.at(index).unlock();
   
   update_minbin(index, new_min);
@@ -62,15 +63,18 @@ int HeapPriorityDistributed2::get_minbin_index() {
   int min = __INT_MAX__;
   int index = -1;
   
+  string s = "";
   for (int i = 0; i < minbin.size(); i++) {
     int val = minbin.at(i).get();
+    s += to_string(val) + " ";
+    
     if (val < min) {
       min = val;
       index = i;
     }
   }
   
-  printf("   Min at index %d\n", index);
+  //printf("   Min at index %3d %s\n", index, s.c_str());
   return index;
 }
 
