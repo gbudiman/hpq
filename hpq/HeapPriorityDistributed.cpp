@@ -11,19 +11,27 @@ using namespace std;
 
 HeapPriorityDistributed::HeapPriorityDistributed() {
   dist = unordered_map<int, HeapPriorityBasic<int>>();
+  busy = unordered_map<int, AtomicWrapper>();
+  max_thread.store(-1);
+  
+  for (int i = 0; i < DEFAULT_BIN_PREALLOCATION; i++) {
+    allocate_bin(i);
+  }
 }
 
 HeapPriorityDistributed::HeapPriorityDistributed(const HeapPriorityDistributed& other) {
-  
+  this->max_thread.store(-1);
 }
 
 HeapPriorityDistributed HeapPriorityDistributed::put(int p, int thread_id) {
-  bool dist_has_been_allocated = (dist.find(thread_id) != dist.end());
+  /*bool dist_has_been_allocated = (dist.find(thread_id) != dist.end());
   bool busy_has_been_allocated = (busy.find(thread_id) != busy.end());
   
   if (!dist_has_been_allocated || !busy_has_been_allocated) {
     allocate_bin(thread_id);
-  }
+  }*/
+  
+  adjust_thread_pool(thread_id);
   
   bool is_busy = true;
   while ((is_busy = busy.at(thread_id).is_busy())) {}
@@ -47,16 +55,16 @@ void HeapPriorityDistributed::allocate_bin(int thread_id) {
   HeapPriorityDistributed::overlord_mutex.lock();
   if (dist.find(thread_id) == dist.end()) {
     dist.insert(pair<int, HeapPriorityBasic<int>>(thread_id, HeapPriorityBasic<int>()));
-    printf("Distbin for T%d created\n", thread_id);
+    //printf("Distbin for T%d created\n", thread_id);
   } else {
-    printf("Skipping distbin for T%d\n", thread_id);
+    //printf("Skipping distbin for T%d\n", thread_id);
   }
   
   if (busy.find(thread_id) == busy.end()) {
     busy.insert(pair<int, AtomicWrapper>(thread_id, AtomicWrapper()));
-    printf("Busybin for T%d created\n", thread_id);
+    //printf("Busybin for T%d created\n", thread_id);
   } else {
-    printf("Skipping busybin for T%d\n", thread_id);
+    //printf("Skipping busybin for T%d\n", thread_id);
   }
 
   HeapPriorityDistributed::overlord_mutex.unlock();
@@ -120,6 +128,8 @@ Node<int> HeapPriorityDistributed::peek() {
 }
 
 Node<int> HeapPriorityDistributed::take(int thread_id) {
+  adjust_thread_pool(thread_id);
+  
   auto index = get_min_dist_index();
   if (index == -1) { return Node<int>(); }
   
@@ -168,6 +178,7 @@ unordered_map<int, Node<int>> HeapPriorityDistributed::peek_dist() {
   overlord_mutex.lock();
   int snapshot_size = 0;
   for (auto it = dist.begin(); it != dist.end(); ++it) {
+    if (it->first > max_thread) { continue; }
     s.insert(pair<int, Node<int>>(it->first, NULL));
     has_been_collected.insert(pair<int, bool>(it->first, false));
     snapshot_size++;
@@ -198,24 +209,11 @@ unordered_map<int, Node<int>> HeapPriorityDistributed::peek_dist() {
   return s;
 }
 
-HeapPriorityBasic<int> HeapPriorityDistributed::dist_safe_access(int id) {
-  while (true) {
-    try {
-      auto r = dist.at(id);
-      return r;
-    } catch (const out_of_range oor) {
-      
-    }
-  }
-}
-
-AtomicWrapper HeapPriorityDistributed::busy_safe_access(int id) {
-  while (true) {
-    try {
-      auto r = busy.at(id);
-      return r;
-    } catch (const out_of_range oor) {
-      
+void HeapPriorityDistributed::adjust_thread_pool(int thread_id) {
+  int old_val = max_thread.load();
+  if (thread_id > old_val) {
+    if (max_thread.compare_exchange_strong(old_val, thread_id)) {
+      printf("Max thread set to %d\n", max_thread.load());
     }
   }
 }

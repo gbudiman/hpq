@@ -14,6 +14,8 @@
 #include "Node.hpp"
 #include "AtomicWrapper.hpp"
 
+#define DEFAULT_BIN_PREALLOCATION 256
+
 class HeapPriorityDistributed {
 public:
   HeapPriorityDistributed();
@@ -33,14 +35,12 @@ public:
 private:
   int get_min_dist_index();
   std::unordered_map<int, Node<int>> peek_dist();
-  
-  HeapPriorityBasic<int> dist_safe_access(int id);
-  AtomicWrapper busy_safe_access(int id);
-  
+
   std::unordered_map<int, HeapPriorityBasic<int>> dist;
   std::unordered_map<int, AtomicWrapper> busy;
   void allocate_bin(int thread_id);
+  void adjust_thread_pool(int thread_id);
   
-  
+  std::atomic_int max_thread;
 };
 #endif /* HeapPriorityDistributed_hpp */

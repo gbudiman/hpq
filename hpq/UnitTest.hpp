@@ -11,7 +11,7 @@
 
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
-#include "HeapPriorityDistributed.hpp"
+#include "HeapPriorityDistributed2.hpp"
 #include "Workload.hpp"
 
 #define PUT_TO_TAKE_RATIO 0.5f
@@ -37,7 +37,8 @@ private:
   void evaluate_content(bool b);
   
   void test_distributed();
-  void distributed_runner(std::shared_ptr<HeapPriorityDistributed> hd, std::vector<int> v, uint8_t thread_id);
+  void distributed_runner(std::shared_ptr<HeapPriorityDistributed2> hd, std::vector<int> v, uint8_t thread_id);
+  void distributed_taker(std::shared_ptr<HeapPriorityDistributed2> hd, uint8_t);
 };
 
 

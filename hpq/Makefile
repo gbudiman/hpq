@@ -1,7 +1,7 @@
 CC=g++
 CF=-g -std=c++11 -Wall -pedantic -pthread
 
-all: workload hpqb unit_test node hpqd atomic
+all: workload hpqb unit_test node h2 atomic_int
 	$(CC) $(CF) *.o main.hpp main.cpp
 
 workload:
@@ -10,8 +10,8 @@ workload:
 hpqb:
 	$(CC) $(CF) -c HeapPriorityBasic.cpp
 
-hpqd:
-	$(CC) $(CF) -c HeapPriorityDistributed.cpp
+h2:
+	$(CC) $(CF) -c HeapPriorityDistributed2.cpp
 
 unit_test:
 	$(CC) $(CF) -c UnitTest.cpp
@@ -19,8 +19,8 @@ unit_test:
 node:
 	$(CC) $(CF) -c Node.cpp
 
-atomic:
-	$(CC) $(CF) -c AtomicWrapper.cpp
+atomic_int:
+	$(CC) $(CF) -c AtomicMin.cpp
 
 clean:
 	rm *.o a.out *.gch

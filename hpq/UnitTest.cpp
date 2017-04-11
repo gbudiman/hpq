@@ -172,9 +172,9 @@ void UnitTest::stress_test() {
 }
 
 void UnitTest::test_distributed() {
-  HeapPriorityDistributed _hd = HeapPriorityDistributed();
+  HeapPriorityDistributed2 _hd = HeapPriorityDistributed2();
   
-  auto hd = make_shared<HeapPriorityDistributed>(_hd);
+  auto hd = make_shared<HeapPriorityDistributed2>(_hd);
   vector<int> v0 = { 7,11, 2, 3, 4};
   vector<int> v1 = { 5, 6, 9, 8,27};
   vector<int> v2 = {11,17,18,14,13};
@@ -185,22 +185,31 @@ void UnitTest::test_distributed() {
   auto t2 = thread(&UnitTest::distributed_runner, this, hd, v2, 2);
   auto t3 = thread(&UnitTest::distributed_runner, this, hd, v3, 3);
   
-  t0.join(); t1.join(); t2.join(); t3.join();
+  this_thread::sleep_for(chrono::milliseconds(10));
+  auto t4 = thread(&UnitTest::distributed_taker, this, hd, 4);
+  auto t5 = thread(&UnitTest::distributed_taker, this, hd, 5);
+  auto t6 = thread(&UnitTest::distributed_taker, this, hd, 6);
+  auto t7 = thread(&UnitTest::distributed_taker, this, hd, 7);
   
-  auto z = hd->peek();
-  cout << hd->peek().priority << endl;;
-  //hd->debug_print();
-  hd->take(0);
-  //hd->debug_print();
-  hd->_verify_all();
+  t0.join(); t1.join(); t2.join(); t3.join();
+  t4.join(); t5.join(); t6.join(); t7.join();
+  
+  
 }
 
-void UnitTest::distributed_runner(shared_ptr<HeapPriorityDistributed> hd, vector<int> v, uint8_t thread_id) {
+void UnitTest::distributed_runner(shared_ptr<HeapPriorityDistributed2> hd, vector<int> v, uint8_t thread_id) {
   for (int i = 0; i < v.size(); i++) {
     hd->put(v.at(i), thread_id);
   }
   
   printf("!!!Thread %d completed run\n", thread_id);
+}
+
+void UnitTest::distributed_taker(std::shared_ptr<HeapPriorityDistributed2> hd, uint8_t thread_id) {
+  for (int i = 0; i < 8; i++) {
+    auto r = hd->take_priority();
+    printf("Thread %d took %d\n", thread_id, r);
+  }
 }
 
 void UnitTest::evaluate(bool b, string s) {

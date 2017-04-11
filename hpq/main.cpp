@@ -10,11 +10,11 @@
 #include "Workload.hpp"
 #include "UnitTest.hpp"
 #include "HeapPriorityBasic.hpp"
-#include "HeapPriorityDistributed.hpp"
+#include "HeapPriorityDistributed2.hpp"
 using namespace std;
 
 HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
-HeapPriorityDistributed hd = HeapPriorityDistributed();
+HeapPriorityDistributed2 h2 = HeapPriorityDistributed2();
 vector<int> hputs = vector<int>();
 vector<int> htakes = vector<int>();
 vector<int> hdiff = vector<int>();
@@ -72,19 +72,22 @@ void run(int id) {
   printf("Thread %3d completed after %d/%d put/take\n", id, count_put, count_take);
 }
 
-void run_distributed(int id) {
+void run_h2(int id) {
   int count_put = 0;
   int count_take = 0;
   
+  this_thread::sleep_for(chrono::microseconds(LOAD_DELAYED_START));
+  if (SHOW_PROGRESS) { printf("Thread %3d started\n", id); }
   for (int i = 0; i < LOAD_ITERATION_LIMIT; i++) {
     int operation = Workload::random_operation();
     int priority;
-    uint16_t out;
+    int out;
     
     switch(operation) {
       case 0:
         priority = Workload::random_priority();
-        hd.put(priority, id);
+        h2.put(id, priority);
+        printf("<< %d\n", priority);
         
         if (DO_VALIDATE) {
           lock_hputs.lock();
@@ -95,8 +98,9 @@ void run_distributed(int id) {
         
         break;
       case 1:
-        out = hd.take_priority(id);
-
+        out = h2.take_priority();
+        printf(">> %d\n", out);
+        
         if (DO_VALIDATE) {
           lock_htakes.lock();
           htakes.push_back(out);
@@ -109,9 +113,14 @@ void run_distributed(int id) {
     if (SHOW_PROGRESS && i % (LOAD_ITERATION_LIMIT / 10) == 0) {
       printf("Thread %3d: %3.0f%% (%6d / %6d)\n", id, (float) i / LOAD_ITERATION_LIMIT * 100.0f, count_put, count_take);
     }
+    this_thread::sleep_for(chrono::microseconds(LOAD_SLEEP == 0 ? 0 : rand() % LOAD_SLEEP));
   }
   
-  printf("Thread %3d completed its run\n", id);
+  printf("Thread %3d completed after %d/%d put/take\n", id, count_put, count_take);
+  
+  for (int i = 0; i < htakes.size(); i++) {
+    printf("%d\n", htakes.at(i));
+  }
 }
 
 void verify_threaded_run() {
@@ -143,21 +152,26 @@ void threaded_stress_test() {
   if (DO_VALIDATE) { verify_threaded_run(); }
   
   auto time_diff = chrono::duration_cast<chrono::milliseconds>(end - begin);
-  printf("Run takes %.2lu ms\n", time_diff);
+  printf("Run takes %.2lld ms\n", time_diff.count());
 }
 
-void threaded_stress_test_distributed() {
+void threaded_stress_test_distributed2() {
   vector<thread> threads = vector<thread>();
   
+  auto begin = chrono::high_resolution_clock::now();
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
-    threads.push_back(thread(run_distributed, i));
+    threads.push_back(thread(run_h2, i));
   }
   
   for (int i = 0; i < DEFAULT_WORKLOAD_THREADS; i++) {
     threads.at(i).join();
   }
   
-  hd._verify_all();
+  auto end = chrono::high_resolution_clock::now();
+  h2._verify_all();
+  
+  auto time_diff = chrono::duration_cast<chrono::milliseconds>(end - begin);
+  printf("Run takes %.2lld ms\n", time_diff.count());
 }
 
 int main(int argc, const char * argv[]) {
@@ -167,7 +181,9 @@ int main(int argc, const char * argv[]) {
   
   //threaded_stress_test_concurrent();
   //UnitTest();
-  threaded_stress_test_distributed();
+  //threaded_stress_test();
+  //threaded_stress_test_distributed();
+  threaded_stress_test_distributed2();
 }
 
 
