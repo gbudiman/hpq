@@ -19,12 +19,13 @@ HeapPriorityDistributed2::HeapPriorityDistributed2(const HeapPriorityDistributed
 
 void HeapPriorityDistributed2::initialize(int bins) {
   dist = vector<HeapPriorityBasic<int>>();
-  minbin = vector<AtomicMin>();
+  minbin = vector<int>();
+  global_minbin = -1;
   mutexes = vector<mutex>(bins);
   
   for (int i = 0; i < bins; i++) {
     dist.push_back(HeapPriorityBasic<int>());
-    minbin.push_back(AtomicMin());
+    minbin.push_back(__INT_MAX__);
   }
 }
 
@@ -42,44 +43,62 @@ int HeapPriorityDistributed2::take_priority() {
 }
 
 Node<int> HeapPriorityDistributed2::take() {
-  int index = get_minbin_index();
+  int index = global_minbin;
   
-  if (index == -1) {
-    return Node<int>();
+  if (index != -1) {
+    mutexes.at(index).lock();
+    
+    Node<int> out = dist.at(index).take();
+    auto new_min = dist.at(index).peek_priority();
+    
+    mutexes.at(index).unlock();
+    
+    update_minbin(index, new_min);
+    return out;
   }
   
-  mutexes.at(index).lock();
-  Node<int> out = dist.at(index).take();
-  auto new_min = dist.at(index).peek_priority();
-  if (new_min == -1) { new_min = __INT_MAX__; }
-  mutexes.at(index).unlock();
-  
-  update_minbin(index, new_min);
-  
-  return out;
+  return Node<int>();
 }
 
-int HeapPriorityDistributed2::get_minbin_index() {
+void HeapPriorityDistributed2::update_minbin(int index, int new_val) {
+  int old_val = minbin.at(index);
+  if (new_val < old_val) {
+    minbin.at(index) = (new_val == -1 ? __INT_MAX__ : new_val);
+    update_global_minbin();
+  }
+}
+
+void HeapPriorityDistributed2::update_global_minbin() {
   int min = __INT_MAX__;
   int index = -1;
+  minbin_mutex.lock();
   
-  string s = "";
   for (int i = 0; i < minbin.size(); i++) {
-    int val = minbin.at(i).get();
-    s += to_string(val) + " ";
-    
-    if (val < min) {
-      min = val;
+    auto local_min = minbin.at(i);
+    //if (local_min == -1) { continue; }
+    if (local_min < min) {
+      min = local_min;
       index = i;
     }
   }
   
-  //printf("   Min at index %3d %s\n", index, s.c_str());
-  return index;
-}
-
-void HeapPriorityDistributed2::update_minbin(int index, int new_val) {
-  minbin.at(index).set(new_val);
+  global_minbin = index;
+  
+  /*debug_print_mutex.lock();
+  string s = "";
+  for (int i = 0; i < minbin.size(); i++) {
+    auto d = minbin.at(i);
+    if (d == __INT_MAX__) {
+      s += "X ";
+    } else {
+      s += to_string(minbin.at(i)) + " ";
+    }
+  }
+  
+  printf("|| %s [%d]\n", s.c_str(), global_minbin);
+  debug_print_mutex.unlock();*/
+  
+  minbin_mutex.unlock();
 }
 
 void HeapPriorityDistributed2::_verify_all() {

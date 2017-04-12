@@ -136,6 +136,59 @@ void verify_threaded_run() {
   }
 }
 
+void sequential_stress_test() {
+  auto begin = chrono::high_resolution_clock::now();
+  int count_put = 0;
+  int count_take = 0;
+  int seq_limit = DEFAULT_WORKLOAD_THREADS * LOAD_ITERATION_LIMIT;
+  
+  this_thread::sleep_for(chrono::microseconds(LOAD_DELAYED_START));
+  if (SHOW_PROGRESS) { printf("Thread %3d started\n", -1); }
+  for (int i = 0; i < seq_limit; i++) {
+    int operation = Workload::random_operation();
+    int priority;
+    int out;
+    
+    switch(operation) {
+      case 0:
+        priority = Workload::random_priority();
+        lock_h.lock();
+        h.put(priority);
+        lock_h.unlock();
+        
+        if (DO_VALIDATE) {
+          lock_hputs.lock();
+          hputs.push_back(priority);
+          lock_hputs.unlock();
+        }
+        count_put++;
+        
+        break;
+      case 1:
+        lock_h.lock();
+        out = h.take_priority();
+        lock_h.unlock();
+        
+        if (DO_VALIDATE) {
+          lock_htakes.lock();
+          htakes.push_back(out);
+          lock_htakes.unlock();
+        }
+        count_take++;
+        break;
+    }
+    
+    if (SHOW_PROGRESS && i % (seq_limit / 10) == 0) {
+      printf("Thread %3d: %3.0f%% (%6d / %6d)\n", -1, (float) i / seq_limit * 100.0f, count_put, count_take);
+    }
+    this_thread::sleep_for(chrono::microseconds(LOAD_SLEEP == 0 ? 0 : rand() % LOAD_SLEEP));
+  }
+  
+  auto end = chrono::high_resolution_clock::now();
+  auto time_diff = chrono::duration_cast<chrono::milliseconds>(end - begin);
+  printf("Run takes %.2lld ms\n", time_diff.count());
+}
+
 void threaded_stress_test() {
   vector<thread> threads = vector<thread>();
   
@@ -179,11 +232,8 @@ int main(int argc, const char * argv[]) {
   srand(time(NULL));
   //Workload();
   //UnitTest();
-  
-  //threaded_stress_test_concurrent();
-  //UnitTest();
+  //sequential_stress_test();
   //threaded_stress_test();
-  //threaded_stress_test_distributed();
   threaded_stress_test_distributed2();
 }
 

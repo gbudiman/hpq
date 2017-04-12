@@ -27,13 +27,21 @@ public:
   
 private:
   void initialize(int bins);
-  int get_minbin_index();
+  //int get_minbin_index();
   void update_minbin(int index, int val);
+  void update_global_minbin();
+  //void invalidate_minbin(int index);
   
   bool verify_bin(int index);
   
   std::vector<HeapPriorityBasic<int>> dist;
-  std::vector<AtomicMin> minbin;
+  std::vector<int> minbin;
+  //std::tuple<int, int> global_minbin; // <index, value>
+  int global_minbin; // index
+  
   std::vector<std::mutex> mutexes;
+  std::mutex minbin_mutex;
+  
+  std::mutex debug_print_mutex;
 };
 #endif /* HeapPriorityDistributed2_hpp */
