@@ -9,13 +9,60 @@
 #include "Workload.hpp"
 using namespace std;
 
-int Workload::random_priority() {
-  return rand() % (LOAD_PRIORITY_MAX - LOAD_PRIORITY_MIN) + LOAD_PRIORITY_MIN;
+long int Workload::run_sequential(int limit) {
+  auto h = make_shared<HeapPriorityBasic<int>>();
+  auto cv = make_shared<ConcurrentVerificator>();
+  auto rt = RunnerThread(h, NULL, 1, limit, cv);
+  auto begin = chrono::high_resolution_clock::now();
+  auto tracker = rt.run();
+  auto end = chrono::high_resolution_clock::now();
+  
+  printf("Thread %d completed after %6d put / %6d take\n", -1, get<0>(tracker), get<1>(tracker));
+  
+  cv->done();
+  return time_it(begin, end);
 }
 
-int Workload::random_operation() {
-  // Returns 1 = take();
-  //         0 = put();
-  int threshold = LOAD_PUT_TO_TAKE_RATIO * RAND_MAX;
-  return rand() < threshold ? 0 : 1;
+long int Workload::run_coarse_grained(int thread_count, int limit) {
+  vector<RunnerThread> threads = vector<RunnerThread>();
+  auto h = make_shared<HeapPriorityBasic<int>>();
+  auto cv = make_shared<ConcurrentVerificator>();
+  auto rt = RunnerThread(h, NULL, thread_count, limit, cv);
+  
+  auto begin = chrono::high_resolution_clock::now();
+  auto tracker = rt.run();
+  auto end = chrono::high_resolution_clock::now();
+  
+  printf("Coarse grained run completed with %d threads, %6d put / %6d take\n", thread_count, get<0>(tracker), get<1>(tracker));
+  
+  cv->done();
+  return time_it(begin, end);
+}
+
+long int Workload::run_concurrent(int thread_count, int limit) {
+  vector<RunnerThread> threads = vector<RunnerThread>();
+  auto h = make_shared<HeapPriorityDistributed2>();
+  auto cv = make_shared<ConcurrentVerificator>();
+  auto rt = RunnerThread(NULL, h, thread_count, limit, cv);
+  
+  auto begin = chrono::high_resolution_clock::now();
+  auto tracker = rt.run();
+  auto end = chrono::high_resolution_clock::now();
+  
+  printf("Concurrent run completed with %d threads, %6d put / %6d take\n", thread_count, get<0>(tracker), get<1>(tracker));
+  
+  cv->done();
+  return time_it(begin, end);
+}
+
+long int Workload::time_it(std::chrono::time_point<std::chrono::high_resolution_clock> a, std::chrono::time_point<std::chrono::high_resolution_clock> b) {
+  chrono::milliseconds diff = chrono::duration_cast<chrono::milliseconds>(b - a);
+  
+  return (long int) diff.count();
+}
+
+void Workload::summarize(long int t_seq, long int t_cgh, long int t_ch2) {
+  printf("Sequential run:     %8ld ms\n", t_seq);
+  printf("Coarse-grained run: %8ld ms\n", t_cgh);
+  printf("Concurrent run:     %8ld ms\n", t_ch2);
 }

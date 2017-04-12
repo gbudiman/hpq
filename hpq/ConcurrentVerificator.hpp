@@ -17,6 +17,7 @@ class ConcurrentVerificator {
 public:
   ConcurrentVerificator();
   ConcurrentVerificator(const ConcurrentVerificator& other);
+  ConcurrentVerificator operator=(const ConcurrentVerificator& other);
   void record(int op, int val, int id);
   void done();
   

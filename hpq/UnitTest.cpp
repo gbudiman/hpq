@@ -131,13 +131,13 @@ bool UnitTest::integration_test() {
   HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
   
   for (int i = 0; i < INTEGRATION_OPS; i++) {
-    int operation = Workload::random_operation();
+    int operation = RunnerThread::random_operation();
     int priority;
     int out;
     
     switch(operation) {
       case 0:
-        priority = Workload::random_priority();
+        priority = RunnerThread::random_priority();
         h.put(priority);
         puts.push_back(priority);
         s += " -> " + to_string(priority) + "\n";

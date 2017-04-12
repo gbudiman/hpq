@@ -17,6 +17,10 @@ ConcurrentVerificator::ConcurrentVerificator(const ConcurrentVerificator& other)
   
 }
 
+ConcurrentVerificator ConcurrentVerificator::operator=(const ConcurrentVerificator &other) {
+  return *this;
+}
+
 void ConcurrentVerificator::record(int op, int val, int id) {
   m.lock();
   sprintf(val_buffer, "%3d ", val);
@@ -75,6 +79,6 @@ void ConcurrentVerificator::verify_all() {
   }
   
   if (error_count == 0) {
-    printf("Concurrent run correctness test passed\n");
+    printf("Run correctness test passed\n");
   }
 }

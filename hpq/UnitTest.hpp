@@ -12,7 +12,7 @@
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
 #include "HeapPriorityDistributed2.hpp"
-#include "Workload.hpp"
+#include "RunnerThread.hpp"
 
 #define PUT_TO_TAKE_RATIO 0.5f
 #define INTEGRATION_OPS 10000
