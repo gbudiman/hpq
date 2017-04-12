@@ -11,10 +11,12 @@
 #include "UnitTest.hpp"
 #include "HeapPriorityBasic.hpp"
 #include "HeapPriorityDistributed2.hpp"
+#include "ConcurrentVerificator.hpp"
 using namespace std;
 
 HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
 HeapPriorityDistributed2 h2 = HeapPriorityDistributed2();
+ConcurrentVerificator cv = ConcurrentVerificator();
 vector<int> hputs = vector<int>();
 vector<int> htakes = vector<int>();
 vector<int> hdiff = vector<int>();
@@ -87,24 +89,20 @@ void run_h2(int id) {
       case 0:
         priority = Workload::random_priority();
         h2.put(id, priority);
-        printf("   %5d\n", priority);
+        //printf("   %5d      [%d]\n", priority, id);
         
         if (DO_VALIDATE) {
-          lock_hputs.lock();
-          //cv.record(OP_PUT, priority);
-          lock_hputs.unlock();
+          cv.record(OP_PUT, priority, id);
         }
         count_put++;
         
         break;
       case 1:
         out = h2.take_priority();
-        printf(">> %10d\n", out);
+        //printf(">> %10d [%d]\n", out, id);
         
         if (DO_VALIDATE) {
-          lock_htakes.lock();
-          //cv.record(OP_TAKE, out);
-          lock_htakes.unlock();
+          cv.record(OP_TAKE, out, id);
         }
         count_take++;
         break;
@@ -226,6 +224,8 @@ void threaded_stress_test_distributed2() {
   
   auto time_diff = chrono::duration_cast<chrono::milliseconds>(end - begin);
   printf("Run takes %.2lld ms\n", time_diff.count());
+  
+  cv.done();
 }
 
 int main(int argc, const char * argv[]) {

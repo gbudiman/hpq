@@ -12,7 +12,6 @@
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
 #include "Node.hpp"
-#include "AtomicMin.hpp"
 
 class HeapPriorityDistributed2 {
 public:

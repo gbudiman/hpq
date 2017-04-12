@@ -17,7 +17,7 @@
 		07B826F91E9B80C000AEE274 /* HeapPriorityDistributed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826F71E9B80C000AEE274 /* HeapPriorityDistributed.cpp */; };
 		07B826FC1E9B8D6600AEE274 /* AtomicWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826FA1E9B8D6600AEE274 /* AtomicWrapper.cpp */; };
 		07B826FF1E9CBAA200AEE274 /* HeapPriorityDistributed2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B826FD1E9CBAA200AEE274 /* HeapPriorityDistributed2.cpp */; };
-		07B827021E9CC50E00AEE274 /* AtomicMin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B827001E9CC50E00AEE274 /* AtomicMin.cpp */; };
+		07B827081E9DD5E200AEE274 /* ConcurrentVerificator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 07B827061E9DD5E200AEE274 /* ConcurrentVerificator.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,8 +55,8 @@
 		07B826FB1E9B8D6600AEE274 /* AtomicWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AtomicWrapper.hpp; sourceTree = "<group>"; };
 		07B826FD1E9CBAA200AEE274 /* HeapPriorityDistributed2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeapPriorityDistributed2.cpp; sourceTree = "<group>"; };
 		07B826FE1E9CBAA200AEE274 /* HeapPriorityDistributed2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HeapPriorityDistributed2.hpp; sourceTree = "<group>"; };
-		07B827001E9CC50E00AEE274 /* AtomicMin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AtomicMin.cpp; sourceTree = "<group>"; };
-		07B827011E9CC50E00AEE274 /* AtomicMin.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AtomicMin.hpp; sourceTree = "<group>"; };
+		07B827061E9DD5E200AEE274 /* ConcurrentVerificator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConcurrentVerificator.cpp; sourceTree = "<group>"; };
+		07B827071E9DD5E200AEE274 /* ConcurrentVerificator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConcurrentVerificator.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,8 +110,8 @@
 				07B826FB1E9B8D6600AEE274 /* AtomicWrapper.hpp */,
 				07B826FD1E9CBAA200AEE274 /* HeapPriorityDistributed2.cpp */,
 				07B826FE1E9CBAA200AEE274 /* HeapPriorityDistributed2.hpp */,
-				07B827001E9CC50E00AEE274 /* AtomicMin.cpp */,
-				07B827011E9CC50E00AEE274 /* AtomicMin.hpp */,
+				07B827061E9DD5E200AEE274 /* ConcurrentVerificator.cpp */,
+				07B827071E9DD5E200AEE274 /* ConcurrentVerificator.hpp */,
 			);
 			path = hpq;
 			sourceTree = "<group>";
@@ -181,9 +181,9 @@
 				07B826FC1E9B8D6600AEE274 /* AtomicWrapper.cpp in Sources */,
 				07B826F61E9AC59E00AEE274 /* NodeBitBang.cpp in Sources */,
 				07B826F01E9AC51900AEE274 /* HeapPriorityBitBang.cpp in Sources */,
+				07B827081E9DD5E200AEE274 /* ConcurrentVerificator.cpp in Sources */,
 				07B826E91E986CEE00AEE274 /* Node.cpp in Sources */,
 				07B826F91E9B80C000AEE274 /* HeapPriorityDistributed.cpp in Sources */,
-				07B827021E9CC50E00AEE274 /* AtomicMin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
