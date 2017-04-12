@@ -64,7 +64,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "-t 64 -r 25 -vx"
+            argument = "-t 8 -r 75 -vx -i 100"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

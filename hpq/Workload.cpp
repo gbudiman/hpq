@@ -17,7 +17,7 @@ long int Workload::run_sequential(int limit) {
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
-  printf("Sequential run completed       %6dP / %6dT\n", get<0>(tracker), get<1>(tracker));
+  printf("Sequential run completed         %6dP / %6dT\n", get<0>(tracker), get<1>(tracker));
   
   if (verify_correctness) cv->done();
   return time_it(begin, end);
@@ -33,7 +33,7 @@ long int Workload::run_coarse_grained() {
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
-  printf("Coarse run completed (%dT)     %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
+  printf("Coarse run completed     (%3dT) %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
   
   if (verify_correctness) cv->done();
   return time_it(begin, end);
@@ -49,7 +49,7 @@ long int Workload::run_concurrent() {
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
-  printf("Concurrent run completed (%dT) %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
+  printf("Concurrent run completed (%3dT) %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
   
   if (verify_correctness) cv->done();
   return time_it(begin, end);

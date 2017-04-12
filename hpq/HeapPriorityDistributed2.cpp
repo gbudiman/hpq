@@ -36,9 +36,11 @@ void HeapPriorityDistributed2::initialize(int bins) {
 HeapPriorityDistributed2 HeapPriorityDistributed2::put(int thread_id, int priority) {
   mutexes.at(thread_id).lock();
   auto new_min = dist.at(thread_id).put(priority).peek_priority();
+  //printf("       %3d [%d]\n", priority, thread_id);
   mutexes.at(thread_id).unlock();
   
-  update_minbin(thread_id, new_min);
+  update_minbin(thread_id, new_min, OP_PUT);
+  
   return *this;
 }
 
@@ -47,62 +49,75 @@ int HeapPriorityDistributed2::take_priority() {
 }
 
 Node<int> HeapPriorityDistributed2::take() {
+  take_mutex.lock();
   int index = global_minbin;
   
   if (index != -1) {
     mutexes.at(index).lock();
-    
     Node<int> out = dist.at(index).take();
-    auto new_min = dist.at(index).peek_priority();
-    
     mutexes.at(index).unlock();
     
-    update_minbin(index, new_min);
+    auto new_min = dist.at(index).peek_priority();
+    
+    update_minbin(index, new_min, OP_TAKE);
+    //printf(">> %3d {%d}\n", out.priority, index);
+    take_mutex.unlock();
     return out;
   }
   
+  //printf("%3d\n", -1);
+  take_mutex.unlock();
   return Node<int>();
 }
 
-void HeapPriorityDistributed2::update_minbin(int index, int new_val) {
-  int old_val = minbin.at(index);
-  if (new_val < old_val) {
-    minbin.at(index) = (new_val == -1 ? __INT_MAX__ : new_val);
-    update_global_minbin();
-  }
-}
-
-void HeapPriorityDistributed2::update_global_minbin() {
+void HeapPriorityDistributed2::update_minbin(int _index, int new_val, int mode) {
+  
+  //if (new_val < old_val) {
+  minbin_mutex.lock();
+  int old_val = minbin.at(_index);
   int min = __INT_MAX__;
   int index = -1;
-  minbin_mutex.lock();
   
+  if (mode == OP_TAKE || (mode == OP_PUT && new_val < old_val)) {
+    minbin.at(_index) = (new_val == -1 ? __INT_MAX__ : new_val);
+  }
+  
+    //minbin_mutex.lock();
+    
   for (int i = 0; i < minbin.size(); i++) {
     auto local_min = minbin.at(i);
-    //if (local_min == -1) { continue; }
     if (local_min < min) {
       min = local_min;
       index = i;
     }
   }
-  
+    
   global_minbin = index;
-  
-  /*debug_print_mutex.lock();
-  string s = "";
+    
+  /*string s = "";
+  char sp[8];
   for (int i = 0; i < minbin.size(); i++) {
     auto d = minbin.at(i);
     if (d == __INT_MAX__) {
-      s += "X ";
+      s += "  X ";
     } else {
-      s += to_string(minbin.at(i)) + " ";
+      sprintf(sp, "%3d ", minbin.at(i));
+      //s += to_string(minbin.at(i)) + " ";
+      s += string(sp);
     }
   }
-  
-  printf("|| %s [%d]\n", s.c_str(), global_minbin);
-  debug_print_mutex.unlock();*/
-  
+    
+  printf("   %s [%d = %d]\n", s.c_str(), global_minbin, min);
+   */
+
   minbin_mutex.unlock();
+  //}
+}
+
+void HeapPriorityDistributed2::update_global_minbin() {
+
+  
+  //minbin_mutex.unlock();
 }
 
 void HeapPriorityDistributed2::_verify_all() {

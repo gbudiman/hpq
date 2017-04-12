@@ -28,7 +28,7 @@ public:
 private:
   void initialize(int bins);
   //int get_minbin_index();
-  void update_minbin(int index, int val);
+  void update_minbin(int index, int val, int mode);
   void update_global_minbin();
   //void invalidate_minbin(int index);
   
@@ -41,6 +41,7 @@ private:
   
   std::vector<std::mutex> mutexes;
   std::mutex minbin_mutex;
+  std::mutex take_mutex;
   
   std::mutex debug_print_mutex;
 };
