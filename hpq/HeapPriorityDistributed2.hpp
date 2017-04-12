@@ -16,6 +16,7 @@
 class HeapPriorityDistributed2 {
 public:
   HeapPriorityDistributed2();
+  HeapPriorityDistributed2(int bins);
   HeapPriorityDistributed2(const HeapPriorityDistributed2& other);
   HeapPriorityDistributed2 put(int thread_id, int priority);
   Node<int> take();

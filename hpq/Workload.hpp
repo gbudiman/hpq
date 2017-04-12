@@ -20,8 +20,8 @@ public:
   static int random_operation();
   
   static long int run_sequential(int limit);
-  static long int run_coarse_grained(int threads, int limit);
-  static long int run_concurrent(int threads, int limit);
+  static long int run_coarse_grained();
+  static long int run_concurrent();
   
   static void summarize(long int t_seq, long int t_cgh, long int t_ch2);
   

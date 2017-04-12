@@ -15,6 +15,7 @@
 #include <tuple>
 #include <math.h>
 #include <stdio.h>
+#include <unistd.h>
 #include <string>
 #include <mutex>
 #include <algorithm>
@@ -30,7 +31,7 @@
 #define LOAD_PUT_TO_TAKE_RATIO 0.75f
 #define LOAD_SLEEP 0 // microseconds
 #define SHOW_STEPS 0
-#define DO_VALIDATE 1
+#define DO_VALIDATE 0
 #define SHOW_PROGRESS 0
 
 #define DEFAULT_NODE 0xFFFFFFFF00000000
@@ -38,5 +39,13 @@
 
 #define OP_TAKE 0
 #define OP_PUT 1
+
+extern int num_threads;
+extern int iteration_limit;
+extern int load_sleep;
+extern float load_ratio;
+extern bool verify_correctness;
+extern bool immediately_terminate;
+extern bool hide_progress;
 
 #endif /* main_h */

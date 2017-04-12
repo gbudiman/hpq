@@ -11,9 +11,7 @@ using namespace std;
 
 RunnerThread::RunnerThread(shared_ptr<HeapPriorityBasic<int>> hb,
                            shared_ptr<HeapPriorityDistributed2> h2,
-                           int num_threads, int limit,
                            shared_ptr<ConcurrentVerificator> cv) {
-  this->num_threads = num_threads;
   
   if (hb != NULL) {
     run_mode = RUN_BASIC;
@@ -23,7 +21,6 @@ RunnerThread::RunnerThread(shared_ptr<HeapPriorityBasic<int>> hb,
     this->h2 = h2;
   }
 
-  this->limit = limit;
   this->cv = cv;
   
   count_take.store(0);
@@ -37,10 +34,8 @@ RunnerThread::RunnerThread(const RunnerThread& other) {
 tuple<int, int> RunnerThread::run() {
   vector<thread> threads = vector<thread>();
   
-  printf("---\n");
-  
   for (int i = 0; i < num_threads; i++) {
-    threads.push_back(thread(&RunnerThread::run_task, this, i, limit));
+    threads.push_back(thread(&RunnerThread::run_task, this, i, iteration_limit));
   }
   
   for (int i = 0; i < num_threads; i++) {
@@ -50,14 +45,19 @@ tuple<int, int> RunnerThread::run() {
   return tuple<int, int>(count_put.load(), count_take.load());
 }
 
+tuple<int, int> RunnerThread::run(int iteration_limit) {
+  run_task(-1, iteration_limit);
+  return tuple<int, int>(count_put.load(), count_take.load());
+}
+
 void RunnerThread::run_task(int thread_id, int limit) {
   int local_count_put = 0;
   int local_count_take = 0;
   
   for (int i = 0; i < limit; i++) {
-    int operation = RunnerThread::random_operation();
+    int operation = RunnerThread::random_operation(load_ratio);
     int priority;
-    int out;
+    int out = -1;
     
     switch(operation) {
       case 0:
@@ -66,13 +66,12 @@ void RunnerThread::run_task(int thread_id, int limit) {
         if (run_mode == RUN_BASIC) {
           lock_h.lock();
           hb->put(priority);
-          
           lock_h.unlock();
         } else if (run_mode == RUN_H2) {
           h2->put(thread_id, priority);
         }
         
-        cv->record(OP_PUT, priority, thread_id);
+        if (verify_correctness) cv->record(OP_PUT, priority, thread_id);
         count_put.fetch_add(1);
         local_count_put++;
         break;
@@ -86,15 +85,19 @@ void RunnerThread::run_task(int thread_id, int limit) {
           out = h2->take_priority();
         }
         
-        cv->record(OP_TAKE, out, thread_id);
+        if (verify_correctness) cv->record(OP_TAKE, out, thread_id);
         
         count_take.fetch_add(1);
         local_count_take++;
         break;
     }
     
-    if (SHOW_PROGRESS && i % (limit / 10) == 0) {
+    if (!hide_progress && i % (limit / 10) == 0) {
       printf("Thread %3d: %3.0f%% (%6d / %6d)\n", thread_id, (float) i / limit * 100.0f, local_count_put, local_count_take);
+    }
+    
+    if (usleep > 0) {
+      this_thread::sleep_for(chrono::microseconds(load_sleep));
     }
   }
 }
@@ -104,8 +107,12 @@ int RunnerThread::random_priority() {
 }
 
 int RunnerThread::random_operation() {
+  return random_operation(LOAD_PUT_TO_TAKE_RATIO * RAND_MAX);
+}
+
+int RunnerThread::random_operation(float ratio) {
   // Returns 1 = take();
   //         0 = put();
-  int threshold = LOAD_PUT_TO_TAKE_RATIO * RAND_MAX;
+  int threshold = ratio * RAND_MAX;
   return rand() < threshold ? 0 : 1;
 }

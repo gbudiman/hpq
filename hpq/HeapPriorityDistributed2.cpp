@@ -13,6 +13,10 @@ HeapPriorityDistributed2::HeapPriorityDistributed2() {
   initialize(DEFAULT_WORKLOAD_THREADS);
 }
 
+HeapPriorityDistributed2::HeapPriorityDistributed2(int bins) {
+  initialize(bins);
+}
+
 HeapPriorityDistributed2::HeapPriorityDistributed2(const HeapPriorityDistributed2& other) {
   
 }

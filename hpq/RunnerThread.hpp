@@ -19,12 +19,14 @@
 
 class RunnerThread {
 public:
-  RunnerThread(std::shared_ptr<HeapPriorityBasic<int>> hb, std::shared_ptr<HeapPriorityDistributed2> h2, int num_threads, int limit, std::shared_ptr<ConcurrentVerificator> cv);
+  RunnerThread(std::shared_ptr<HeapPriorityBasic<int>> hb, std::shared_ptr<HeapPriorityDistributed2> h2, std::shared_ptr<ConcurrentVerificator> cv);
   RunnerThread(const RunnerThread& other);
   std::tuple<int, int> run();
+  std::tuple<int, int> run(int limit);
   
   static int random_priority();
   static int random_operation();
+  static int random_operation(float ratio);
   
 private:
   void run_task(int thread_id, int limit);
@@ -32,8 +34,6 @@ private:
   int run_mode;
   std::shared_ptr<HeapPriorityBasic<int>> hb;
   std::shared_ptr<HeapPriorityDistributed2> h2;
-  int num_threads;
-  int limit;
   
   std::mutex lock_h;
   

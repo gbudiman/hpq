@@ -53,22 +53,25 @@ void ConcurrentVerificator::verify_all() {
   if (pfile != NULL) {
     int line_number = 0;
     char line[128];
-    char ignore[128];
     while (fgets(line, sizeof(line), pfile) != NULL) {
       line_number++;
       if (line[0] == '>') {
         int out;
-        sscanf(line, ">>%s%d", ignore, &out);
+        if (line[4] == '-') {
+          out = -1;
+        } else {
+          sscanf(line, ">> %d", &out);
+        }
 
         int cmp = h.take_priority();
         
-        if (out != cmp && out != 0) {
+        if (out != cmp) {
           printf("Error in line %d, expected %d got %d\n", line_number, cmp, out);
           error_count++;
         }
       } else {
         int val;
-        sscanf(line, "%s %d", ignore, &val);
+        sscanf(line, " %d", &val);
         h.put(val);
       }
     }

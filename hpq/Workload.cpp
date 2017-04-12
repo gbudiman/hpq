@@ -12,46 +12,46 @@ using namespace std;
 long int Workload::run_sequential(int limit) {
   auto h = make_shared<HeapPriorityBasic<int>>();
   auto cv = make_shared<ConcurrentVerificator>();
-  auto rt = RunnerThread(h, NULL, 1, limit, cv);
+  auto rt = RunnerThread(h, NULL, cv);
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
-  printf("Thread %d completed after %6d put / %6d take\n", -1, get<0>(tracker), get<1>(tracker));
+  printf("Sequential run completed       %6dP / %6dT\n", get<0>(tracker), get<1>(tracker));
   
-  cv->done();
+  if (verify_correctness) cv->done();
   return time_it(begin, end);
 }
 
-long int Workload::run_coarse_grained(int thread_count, int limit) {
+long int Workload::run_coarse_grained() {
   vector<RunnerThread> threads = vector<RunnerThread>();
   auto h = make_shared<HeapPriorityBasic<int>>();
   auto cv = make_shared<ConcurrentVerificator>();
-  auto rt = RunnerThread(h, NULL, thread_count, limit, cv);
+  auto rt = RunnerThread(h, NULL, cv);
   
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
-  printf("Coarse grained run completed with %d threads, %6d put / %6d take\n", thread_count, get<0>(tracker), get<1>(tracker));
+  printf("Coarse run completed (%dT)     %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
   
-  cv->done();
+  if (verify_correctness) cv->done();
   return time_it(begin, end);
 }
 
-long int Workload::run_concurrent(int thread_count, int limit) {
+long int Workload::run_concurrent() {
   vector<RunnerThread> threads = vector<RunnerThread>();
-  auto h = make_shared<HeapPriorityDistributed2>();
+  auto h = make_shared<HeapPriorityDistributed2>(num_threads);
   auto cv = make_shared<ConcurrentVerificator>();
-  auto rt = RunnerThread(NULL, h, thread_count, limit, cv);
+  auto rt = RunnerThread(NULL, h, cv);
   
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
-  printf("Concurrent run completed with %d threads, %6d put / %6d take\n", thread_count, get<0>(tracker), get<1>(tracker));
+  printf("Concurrent run completed (%dT) %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
   
-  cv->done();
+  if (verify_correctness) cv->done();
   return time_it(begin, end);
 }
 

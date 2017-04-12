@@ -1,7 +1,7 @@
 CC=g++
 CF=-g -std=c++11 -Wall -pedantic -pthread
 
-all: workload hpqb unit_test node h2 atomic_int
+all: workload hpqb unit_test node h2 runner verificator
 	$(CC) $(CF) *.o main.hpp main.cpp
 
 workload:
@@ -19,8 +19,11 @@ unit_test:
 node:
 	$(CC) $(CF) -c Node.cpp
 
-atomic_int:
-	$(CC) $(CF) -c AtomicMin.cpp
+runner:
+	$(CC) $(CF) -c RunnerThread.cpp
+
+verificator:
+	$(CC) $(CF) -c ConcurrentVerificator.cpp
 
 clean:
 	rm *.o a.out *.gch
