@@ -57,9 +57,11 @@ int main(int argc, char * argv[]) {
   
   srand(time(NULL));
   //UnitTest();
-  if (load_sleep > 0) {
-    printf("All threads sleep for %d us between iteration\n", load_sleep);
-  }
+  
+  printf("Sleep between iteration:  %6d ms\n", load_sleep);
+  printf("Put to take ratio:        %6.0f %%\n", load_ratio * 100);
+  printf("Iterations count:         %6d\n", iteration_limit);
+  printf("\n");
   
   auto t_seq = Workload::run_sequential(num_threads * iteration_limit);
   auto t_cgh = Workload::run_coarse_grained();
