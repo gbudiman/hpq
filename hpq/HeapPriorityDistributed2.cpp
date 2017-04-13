@@ -21,6 +21,10 @@ HeapPriorityDistributed2::HeapPriorityDistributed2(const HeapPriorityDistributed
   
 }
 
+void HeapPriorityDistributed2::attach_verificator(shared_ptr<ConcurrentVerificator> cv) {
+  this->cv = cv;
+}
+
 void HeapPriorityDistributed2::initialize(int bins) {
   dist = vector<HeapPriorityBasic<int>>();
   minbin = vector<int>();
@@ -37,9 +41,12 @@ HeapPriorityDistributed2 HeapPriorityDistributed2::put(int thread_id, int priori
   mutexes.at(thread_id).lock();
   auto new_min = dist.at(thread_id).put(priority).peek_priority();
   //printf("       %3d [%d]\n", priority, thread_id);
+  
+  
   mutexes.at(thread_id).unlock();
   
   update_minbin(thread_id, new_min, OP_PUT);
+  if (cv != NULL) { cv->record(OP_PUT, priority, thread_id); }
   
   return *this;
 }
@@ -61,11 +68,14 @@ Node<int> HeapPriorityDistributed2::take() {
     
     update_minbin(index, new_min, OP_TAKE);
     //printf(">> %3d {%d}\n", out.priority, index);
+    if (cv != NULL ) { cv->record(OP_TAKE, out.priority, -1); }
     take_mutex.unlock();
+    
     return out;
   }
   
   //printf("%3d\n", -1);
+  if (cv != NULL ) { cv->record(OP_TAKE, -1, -1); }
   take_mutex.unlock();
   return Node<int>();
 }

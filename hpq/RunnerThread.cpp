@@ -28,7 +28,7 @@ RunnerThread::RunnerThread(shared_ptr<HeapPriorityBasic<int>> hb,
 }
 
 RunnerThread::RunnerThread(const RunnerThread& other) {
-  
+  // copy constructor so compiler doesn't complain on deleted mutex/atomic constructors
 }
 
 tuple<int, int> RunnerThread::run() {
@@ -63,29 +63,33 @@ void RunnerThread::run_task(int thread_id, int limit) {
       case 0:
         priority = RunnerThread::random_priority();
         
+        // sequential implementation of insert
         if (run_mode == RUN_BASIC) {
           lock_h.lock();
-          hb->put(priority);
+          hb->put(priority); // insert data to sequential implementation
+                             // adjust the method name accordingly
           lock_h.unlock();
+          cv->record(OP_PUT, priority, thread_id); // optional: correctness verification
         } else if (run_mode == RUN_H2) {
+          // concurrent implementation insert
           h2->put(thread_id, priority);
         }
-        
-        if (verify_correctness) cv->record(OP_PUT, priority, thread_id);
+
         count_put.fetch_add(1);
         local_count_put++;
         break;
       case 1:
+        
+        // sequential implementation of remove_min
         if (run_mode == RUN_BASIC) {
           lock_h.lock();
           out = hb->take_priority();
           
           lock_h.unlock();
+          cv->record(OP_TAKE, out, thread_id);
         } else if (run_mode == RUN_H2) {
           out = h2->take_priority();
         }
-        
-        if (verify_correctness) cv->record(OP_TAKE, out, thread_id);
         
         count_take.fetch_add(1);
         local_count_take++;

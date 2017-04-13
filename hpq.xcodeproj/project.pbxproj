@@ -84,19 +84,19 @@
 				072390871E95CF280026FF89 /* main.hpp */,
 				072390841E95CF190026FF89 /* Workload.cpp */,
 				072390851E95CF190026FF89 /* Workload.hpp */,
+				07B827091E9DF02D00AEE274 /* RunnerThread.cpp */,
+				07B8270A1E9DF02D00AEE274 /* RunnerThread.hpp */,
 				0723908B1E95EB120026FF89 /* HeapPriorityBasic.cpp */,
 				0723908C1E95EB120026FF89 /* HeapPriorityBasic.hpp */,
+				07B826FD1E9CBAA200AEE274 /* HeapPriorityDistributed2.cpp */,
+				07B826FE1E9CBAA200AEE274 /* HeapPriorityDistributed2.hpp */,
 				0723908E1E95F04E0026FF89 /* UnitTest.cpp */,
 				0723908F1E95F04E0026FF89 /* UnitTest.hpp */,
 				07B826E71E986CEE00AEE274 /* Node.cpp */,
 				07B826E81E986CEE00AEE274 /* Node.hpp */,
 				07B826ED1E98988C00AEE274 /* Lock.hpp */,
-				07B826FD1E9CBAA200AEE274 /* HeapPriorityDistributed2.cpp */,
-				07B826FE1E9CBAA200AEE274 /* HeapPriorityDistributed2.hpp */,
 				07B827061E9DD5E200AEE274 /* ConcurrentVerificator.cpp */,
 				07B827071E9DD5E200AEE274 /* ConcurrentVerificator.hpp */,
-				07B827091E9DF02D00AEE274 /* RunnerThread.cpp */,
-				07B8270A1E9DF02D00AEE274 /* RunnerThread.hpp */,
 			);
 			path = hpq;
 			sourceTree = "<group>";

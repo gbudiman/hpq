@@ -22,6 +22,7 @@ ConcurrentVerificator ConcurrentVerificator::operator=(const ConcurrentVerificat
 }
 
 void ConcurrentVerificator::record(int op, int val, int id) {
+  if (!verify_correctness) { return; }
   m.lock();
   sprintf(val_buffer, "%3d ", val);
   sprintf(id_buffer, "[%3d]", id);
@@ -35,6 +36,11 @@ void ConcurrentVerificator::record(int op, int val, int id) {
 }
 
 void ConcurrentVerificator::done() {
+  if (!verify_correctness) {
+    printf("Skipped correctness verification. Run with -v option to enable verification");
+    return;
+  }
+  
   FILE* pfile;
   pfile = fopen(HISTORY_FILE, "w");
   
@@ -44,11 +50,71 @@ void ConcurrentVerificator::done() {
   verify_all();
 }
 
+int ConcurrentVerificator::find_in_oor(int cmp, int out) {
+  auto cmp_index = find(oor_cmp.begin(), oor_cmp.end(), out);
+  auto out_index = find(oor_out.begin(), oor_out.end(), cmp);
+  int dist = 0;
+  int result;
+  
+  if (cmp_index != oor_cmp.end() && out_index != oor_out.end()) {
+    //int dist = abs(cmp_index - out_index);
+    
+    //printf("Out-of-order by %d ticks\n");
+    oor_cmp.erase(cmp_index);
+    oor_out.erase(out_index);
+    
+    dist = (int) max(distance(oor_cmp.begin(), cmp_index), distance(oor_out.begin(), out_index));
+    result = -1;
+  } else if (cmp_index != oor_cmp.end()) {
+    oor_cmp.erase(cmp_index);
+    oor_cmp.push_back(cmp);
+    
+    dist = (int) distance(cmp_index, oor_cmp.end());
+    result = 0;
+  } else if (out_index != oor_out.end()) {
+    oor_out.erase(out_index);
+    if (out != -1) { oor_out.push_back(out); }
+    
+    dist = (int) distance(out_index, oor_out.end());
+    result = 0;
+  } else {
+    oor_cmp.push_back(cmp);
+    oor_out.push_back(out);
+    result = 1;
+  }
+  
+  if (dist > max_oor_dist) {
+    max_oor_dist = dist;
+  }
+  
+  //dump_oor_content();
+  return result;
+}
+
+void ConcurrentVerificator::dump_oor_content() {
+  string s = "CMP {";
+  string t = "OUT {";
+  
+  int max_index = (int) max(oor_cmp.size(), oor_out.size());
+  for (int i = 0; i < max_index; i++) {
+    if (i < oor_cmp.size()) { s += to_string(oor_cmp.at(i)) + " "; }
+    if (i < oor_out.size()) { t += to_string(oor_out.at(i)) + " "; }
+  }
+  s += "}\n";
+  t += "}\n";
+  cout << s;
+  cout << t;
+}
+
 void ConcurrentVerificator::verify_all() {
   FILE *pfile = NULL;
   pfile = fopen(HISTORY_FILE, "r");
   HeapPriorityBasic<int> h = HeapPriorityBasic<int>();
   int error_count = 0;
+  int out_of_order_count = 0;
+  oor_cmp = vector<int>();
+  oor_out = vector<int>();
+  max_oor_dist = 0;
   
   if (pfile != NULL) {
     int line_number = 0;
@@ -66,8 +132,10 @@ void ConcurrentVerificator::verify_all() {
         int cmp = h.take_priority();
         
         if (out != cmp) {
-          printf("Error in line %d, expected %d got %d\n", line_number, cmp, out);
-          error_count++;
+          
+          error_count += find_in_oor(cmp, out);
+          //printf("[%d] Error in line %d, expected %d got %d\n", error_count, line_number, cmp, out);
+          out_of_order_count++;
         }
       } else {
         int val;
@@ -83,5 +151,13 @@ void ConcurrentVerificator::verify_all() {
   
   if (error_count == 0) {
     printf("Run correctness test passed\n");
+  }
+  
+  if (out_of_order_count > 0) {
+    printf("  Values received out-of-order: %d\n", out_of_order_count);
+  }
+  
+  if (max_oor_dist > 0) {
+    printf("  Maximum out-of-order distance: %d\n", max_oor_dist);
   }
 }

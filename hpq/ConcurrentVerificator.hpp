@@ -23,12 +23,18 @@ public:
   
 private:
   void verify_all();
+  int find_in_oor(int cmp, int out);
+  void dump_oor_content();
   
   char val_buffer[8];
   char id_buffer[8];
   std::string s;
   
   std::mutex m;
+  
+  std::vector<int> oor_cmp;
+  std::vector<int> oor_out;
+  int max_oor_dist;
 };
 
 #endif /* ConcurrentVerificator_hpp */

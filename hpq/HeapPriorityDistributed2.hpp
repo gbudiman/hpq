@@ -11,6 +11,7 @@
 
 #include "main.hpp"
 #include "HeapPriorityBasic.hpp"
+#include "ConcurrentVerificator.hpp"
 #include "Node.hpp"
 
 class HeapPriorityDistributed2 {
@@ -20,6 +21,8 @@ public:
   HeapPriorityDistributed2(const HeapPriorityDistributed2& other);
   HeapPriorityDistributed2 put(int thread_id, int priority);
   Node<int> take();
+  
+  void attach_verificator(std::shared_ptr<ConcurrentVerificator> cv);
   int take_priority();
   
   bool verify_all();
@@ -38,6 +41,8 @@ private:
   std::vector<int> minbin;
   //std::tuple<int, int> global_minbin; // <index, value>
   int global_minbin; // index
+  
+  std::shared_ptr<ConcurrentVerificator> cv;
   
   std::vector<std::mutex> mutexes;
   std::mutex minbin_mutex;

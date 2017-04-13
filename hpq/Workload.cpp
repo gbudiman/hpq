@@ -35,7 +35,7 @@ long int Workload::run_coarse_grained() {
   
   printf("Coarse run completed     (%3dT) %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
   
-  if (verify_correctness) cv->done();
+  cv->done();
   return time_it(begin, end);
 }
 
@@ -45,13 +45,15 @@ long int Workload::run_concurrent() {
   auto cv = make_shared<ConcurrentVerificator>();
   auto rt = RunnerThread(NULL, h, cv);
   
+  h->attach_verificator(cv);
+  
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
   
   printf("Concurrent run completed (%3dT) %6dP / %6dT\n", num_threads, get<0>(tracker), get<1>(tracker));
   
-  if (verify_correctness) cv->done();
+  cv->done();
   return time_it(begin, end);
 }
 
