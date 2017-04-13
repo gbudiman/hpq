@@ -36,11 +36,6 @@ void ConcurrentVerificator::record(int op, int val, int id) {
 }
 
 void ConcurrentVerificator::done() {
-  if (!verify_correctness) {
-    printf("Skipped correctness verification. Run with -v option to enable verification");
-    return;
-  }
-  
   FILE* pfile;
   pfile = fopen(HISTORY_FILE, "w");
   

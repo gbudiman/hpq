@@ -61,6 +61,8 @@ int main(int argc, char * argv[]) {
   printf("Sleep between iteration:  %6d ms\n", load_sleep);
   printf("Put to take ratio:        %6.0f %%\n", load_ratio * 100);
   printf("Iterations count:         %6d\n", iteration_limit);
+  printf("Verify correctness:        %s\n", verify_correctness ? " TRUE" : "FALSE");
+  printf("Show progress:             %s\n", hide_progress ? "FALSE" : " TRUE");
   printf("\n");
   
   auto t_seq = Workload::run_sequential(num_threads * iteration_limit);
