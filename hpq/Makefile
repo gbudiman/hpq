@@ -1,5 +1,5 @@
 CC=g++
-CF=-g -std=c++11 -Wall -pedantic -pthread
+CF=-g -std=c++11 -Wall -pedantic -pthread -Ofast
 
 all: workload hpqb unit_test node h2 runner verificator
 	$(CC) $(CF) *.o main.hpp main.cpp

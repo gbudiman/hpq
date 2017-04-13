@@ -51,6 +51,15 @@ void process_args(int argc, char* argv[]) {
   }
 }
 
+void print_parameters() {
+  printf("Sleep between iteration:  %6d ms\n", load_sleep);
+  printf("Put to take ratio:        %6.0f %%\n", load_ratio * 100);
+  printf("Iterations count:         %6d\n", iteration_limit);
+  printf("Verify correctness:        %s\n", verify_correctness ? " TRUE" : "FALSE");
+  printf("Show progress:             %s\n", hide_progress ? "FALSE" : " TRUE");
+  printf("\n");
+}
+
 int main(int argc, char * argv[]) {
   process_args(argc, argv);
   if (immediately_terminate) { return 0; }
@@ -58,18 +67,17 @@ int main(int argc, char * argv[]) {
   srand(time(NULL));
   //UnitTest();
   
-  printf("Sleep between iteration:  %6d ms\n", load_sleep);
-  printf("Put to take ratio:        %6.0f %%\n", load_ratio * 100);
-  printf("Iterations count:         %6d\n", iteration_limit);
-  printf("Verify correctness:        %s\n", verify_correctness ? " TRUE" : "FALSE");
-  printf("Show progress:             %s\n", hide_progress ? "FALSE" : " TRUE");
-  printf("\n");
+  print_parameters();
+  FILE* p;
+  p = fopen("benchmark.txt", "a+");
+  
   
   auto t_seq = Workload::run_sequential(num_threads * iteration_limit);
   auto t_cgh = Workload::run_coarse_grained();
   auto t_ch2 = Workload::run_concurrent();
-  Workload::summarize(t_seq, t_cgh, t_ch2);
+  Workload::summarize(t_seq, t_cgh, t_ch2, p);
   
+  fclose(p);
   return 0;
 }
 

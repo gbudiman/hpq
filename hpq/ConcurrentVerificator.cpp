@@ -36,6 +36,8 @@ void ConcurrentVerificator::record(int op, int val, int id) {
 }
 
 void ConcurrentVerificator::done() {
+  if (!verify_correctness) { return; }
+  
   FILE* pfile;
   pfile = fopen(HISTORY_FILE, "w");
   

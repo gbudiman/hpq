@@ -23,7 +23,7 @@ public:
   static long int run_coarse_grained();
   static long int run_concurrent();
   
-  static void summarize(long int t_seq, long int t_cgh, long int t_ch2);
+  static void summarize(long int t_seq, long int t_cgh, long int t_ch2, FILE* p);
   
 private:
   static std::tuple<int, int> run(std::shared_ptr<HeapPriorityBasic<int>> h, int thread_id, int limit);
