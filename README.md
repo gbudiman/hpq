@@ -1,5 +1,7 @@
 # hpq
-Heap Priority Queue
+Concurrent Heap-based Priority Queue
+Gloria Budiman
+6528-18360-50
 
 # Compilation
 ```
@@ -27,7 +29,11 @@ These flags can be combined like the following.
 Enabling correctness verification will skew timing. The benchmark reported disables this verification.
 
 Our code do not check for invalid value. Make sure you pass valid parameters as defined below:
+
 -d DEFAULT: 0. Any positive or zero integer.
+
 -i DEFAULT: 2000. Any positive non-zero integer.
+
 -r DEFAULT: 75. Any integer between 1 and 99. Anything beyond this range results in undefined behavior.
+
 -t DEFAULT: 32. Any positive non-zero integer
