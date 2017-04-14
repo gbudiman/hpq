@@ -1,0 +1,11 @@
+./a.out -x -jr 45 -t 16 -i 20000
+./a.out -x -jr 50 -t 16 -i 20000
+./a.out -x -jr 55 -t 16 -i 20000
+./a.out -x -jr 60 -t 16 -i 20000
+./a.out -x -jr 65 -t 16 -i 20000
+./a.out -x -jr 70 -t 16 -i 20000
+./a.out -x -jr 75 -t 16 -i 20000
+./a.out -x -jr 80 -t 16 -i 20000
+./a.out -x -jr 85 -t 16 -i 20000
+./a.out -x -jr 90 -t 16 -i 20000
+./a.out -x -jr 95 -t 16 -i 20000

@@ -25,6 +25,7 @@ private:
   void verify_all();
   int find_in_oor(int cmp, int out);
   void dump_oor_content();
+  int get_max_oor_content_length();
   
   char val_buffer[8];
   char id_buffer[8];

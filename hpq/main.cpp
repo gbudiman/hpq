@@ -47,6 +47,7 @@ void process_args(int argc, char* argv[]) {
       case 'i': iteration_limit = atoi(optarg); break;
       case 'r': load_ratio = (float) (atoi(optarg)) / 100.0f; break;
       case 'x': hide_progress = true; break;
+      case 'd': load_sleep = atoi(optarg); break;
     }
   }
 }
