@@ -19,11 +19,12 @@ Gloria Budiman
 > ./a.out -r 70             // 70% remove, 30% remove
 > ./a.out -v                // Enable correctness verification
 > ./a.out -d 10             // Each thread sleeps 10us between iteration
+> ./a.out -p 320000         // Prepopulate with 320000 item before benchmark
 ```
 
 These flags can be combined like the following. 
 ```
-> ./a.out -xv -t 64 -i 5000 -r 70 -d 10
+> ./a.out -xv -t 64 -i 5000 -r 70 -d 10 -p 320000
 ```
 
 Enabling correctness verification will skew timing. The benchmark reported disables this verification.
@@ -37,3 +38,5 @@ Our code do not check for invalid value. Make sure you pass valid parameters as 
 -r DEFAULT: 75. Any integer between 1 and 99. Anything beyond this range results in undefined behavior.
 
 -t DEFAULT: 32. Any positive non-zero integer
+
+-p DEFAULT: 0. Any positive integer.
