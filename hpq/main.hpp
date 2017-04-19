@@ -47,5 +47,6 @@ extern float load_ratio;
 extern bool verify_correctness;
 extern bool immediately_terminate;
 extern bool hide_progress;
+extern int prepopulate;
 
 #endif /* main_h */

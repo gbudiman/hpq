@@ -59,6 +59,7 @@ public:
   // you don't have to record this calls if you don't want to
   std::tuple<int, int> run();
   std::tuple<int, int> run(int limit);
+  void prepopulate(int n);
   
   static int random_priority(); // randomly selects a priority score
                                 // see implementation details

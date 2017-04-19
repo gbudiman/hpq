@@ -21,6 +21,7 @@ float load_ratio = LOAD_PUT_TO_TAKE_RATIO;
 bool verify_correctness = DO_VALIDATE;
 bool immediately_terminate = false;
 bool hide_progress = false;
+int prepopulate = 0;
 
 void print_help() {
   cout << "Configurable run parameters:\n";
@@ -39,7 +40,7 @@ void print_help() {
 void process_args(int argc, char* argv[]) {
   char opt;
   
-  while ((opt = getopt(argc, argv, "hvxt:i:r:d:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvxt:i:r:d:p:")) != -1) {
     switch(opt) {
       case 'h': print_help(); break;
       case 'v': verify_correctness = true; break;
@@ -48,6 +49,7 @@ void process_args(int argc, char* argv[]) {
       case 'r': load_ratio = (float) (atoi(optarg)) / 100.0f; break;
       case 'x': hide_progress = true; break;
       case 'd': load_sleep = atoi(optarg); break;
+      case 'p': prepopulate = atoi(optarg); break;
     }
   }
 }
@@ -56,6 +58,7 @@ void print_parameters() {
   printf("Sleep between iteration:  %6d ms\n", load_sleep);
   printf("Put to take ratio:        %6.0f %%\n", load_ratio * 100);
   printf("Iterations count:         %6d\n", iteration_limit);
+  printf("Prepopulate:              %6d\n", prepopulate);
   printf("Verify correctness:        %s\n", verify_correctness ? " TRUE" : "FALSE");
   printf("Show progress:             %s\n", hide_progress ? "FALSE" : " TRUE");
   printf("\n");

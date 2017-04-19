@@ -50,6 +50,19 @@ tuple<int, int> RunnerThread::run(int iteration_limit) {
   return tuple<int, int>(count_put.load(), count_take.load());
 }
 
+void RunnerThread::prepopulate(int n) {
+  for (int i = 0; i < n; i++) {
+    switch(run_mode) {
+      case RUN_BASIC:
+        hb->put(RunnerThread::random_priority());
+        break;
+      case RUN_H2:
+        h2->put(i % num_threads, RunnerThread::random_priority());
+        break;
+    }
+  }
+}
+
 void RunnerThread::run_task(int thread_id, int limit) {
   int local_count_put = 0;
   int local_count_take = 0;

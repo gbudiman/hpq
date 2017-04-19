@@ -13,6 +13,9 @@ long int Workload::run_sequential(int limit) {
   auto h = make_shared<HeapPriorityBasic<int>>();
   auto cv = make_shared<ConcurrentVerificator>();
   auto rt = RunnerThread(h, NULL, cv);
+  
+  rt.prepopulate(prepopulate);
+  
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
   auto end = chrono::high_resolution_clock::now();
@@ -28,6 +31,8 @@ long int Workload::run_coarse_grained() {
   auto h = make_shared<HeapPriorityBasic<int>>();
   auto cv = make_shared<ConcurrentVerificator>();
   auto rt = RunnerThread(h, NULL, cv);
+  
+  rt.prepopulate(prepopulate);
   
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
@@ -46,6 +51,8 @@ long int Workload::run_concurrent() {
   auto rt = RunnerThread(NULL, h, cv);
   
   h->attach_verificator(cv);
+  
+  rt.prepopulate(prepopulate);
   
   auto begin = chrono::high_resolution_clock::now();
   auto tracker = rt.run();
