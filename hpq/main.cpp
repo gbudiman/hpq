@@ -28,6 +28,7 @@ void print_help() {
   cout << " -h Show this help\n\n";
   cout << " -d Sleep between iteration (microseconds) (default: " << LOAD_SLEEP << ")\n";
   cout << " -i Iteration per thread                   (default: " << LOAD_ITERATION_LIMIT << ")\n";
+  cout << " -p Prepopulate with items                 (default: " << prepopulate << ")\n";
   cout << " -r put() to take() percentage ratio       (default: " << (int) (LOAD_PUT_TO_TAKE_RATIO * 100) << ")\n";
   cout << " -t Number of threads                      (default: " << DEFAULT_WORKLOAD_THREADS << ")\n";
   cout << " -v Verify correctness                     (default: FALSE)\n";
