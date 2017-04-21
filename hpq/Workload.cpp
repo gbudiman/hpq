@@ -75,6 +75,7 @@ void Workload::summarize(long int t_seq, long int t_cgh, long int t_ch2, FILE* p
   printf("Sequential run:     %8ld ms (%8.2f kOPS/s)\n", t_seq, ops/t_seq);
   printf("Coarse-grained run: %8ld ms (%8.2f kOPS/s)\n", t_cgh, ops/t_cgh);
   printf("Concurrent run:     %8ld ms (%8.2f kOPS/s)\n", t_ch2, ops/t_ch2);
+  printf("Speedup:               %8.2fX\n", (float) t_cgh / (float) t_ch2);
   
   if (p != NULL) {
     fprintf(p, "%3d %8d %3d %.2f | %8ld %8ld %8ld | %8.2f %8.2f %8.2f\n", num_threads, iteration_limit, load_sleep, load_ratio, t_seq, t_cgh, t_ch2, ops/t_seq, ops/t_cgh, ops/t_ch2);

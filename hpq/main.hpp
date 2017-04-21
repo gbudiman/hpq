@@ -48,5 +48,6 @@ extern bool verify_correctness;
 extern bool immediately_terminate;
 extern bool hide_progress;
 extern int prepopulate;
+extern bool do_unit_test;
 
 #endif /* main_h */

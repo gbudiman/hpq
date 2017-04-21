@@ -22,6 +22,7 @@ bool verify_correctness = DO_VALIDATE;
 bool immediately_terminate = false;
 bool hide_progress = false;
 int prepopulate = 0;
+bool do_unit_test = false;
 
 void print_help() {
   cout << "Configurable run parameters:\n";
@@ -41,7 +42,7 @@ void print_help() {
 void process_args(int argc, char* argv[]) {
   char opt;
   
-  while ((opt = getopt(argc, argv, "hvxt:i:r:d:p:")) != -1) {
+  while ((opt = getopt(argc, argv, "hvxut:i:r:d:p:")) != -1) {
     switch(opt) {
       case 'h': print_help(); break;
       case 'v': verify_correctness = true; break;
@@ -51,6 +52,7 @@ void process_args(int argc, char* argv[]) {
       case 'x': hide_progress = true; break;
       case 'd': load_sleep = atoi(optarg); break;
       case 'p': prepopulate = atoi(optarg); break;
+      case 'u': do_unit_test = true; break;
     }
   }
 }
@@ -70,7 +72,7 @@ int main(int argc, char * argv[]) {
   if (immediately_terminate) { return 0; }
   
   srand(time(NULL));
-  //UnitTest();
+  if (do_unit_test) { UnitTest(); }
   
   print_parameters();
   FILE* p;

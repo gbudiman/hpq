@@ -11,19 +11,17 @@ using namespace std;
 
 UnitTest::UnitTest() {
   srand(time(NULL));
-  /*test_heap_structure();
+  test_heap_structure();
   test_take();
   test_put();
   
-  test_take();*/
-  
   //manual_integration();
-  //integration_test();
+  integration_test();
   //stress_test();
   //threaded_stress_test();
   
   //test_concurrent_put();
-  test_distributed();
+  //test_distributed();
 }
 
 void UnitTest::test_heap_structure() {
